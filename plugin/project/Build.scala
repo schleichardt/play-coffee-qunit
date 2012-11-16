@@ -15,7 +15,7 @@ object ApplicationBuild extends Build {
     val main = PlayProject(appName, appVersion, appDependencies).settings(
       organization := "info.schleichardt",
       publishTo := Some(Resolver.file("file",  new File(publishingFolder))(Resolver.mavenStylePatterns)),
-      publishMavenStyle := true 
+      publishMavenStyle := true
     )
 
 }
