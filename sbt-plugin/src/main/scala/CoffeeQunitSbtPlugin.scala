@@ -1,7 +1,7 @@
 package info.schleichardt.playcoffeequnit
 
 import sbt._
-import Keys._
+import sbt.Keys._
 import sbt.PlayExceptions.CompilationException
 import sbt.PlayProject._
 import scala.Some
@@ -27,7 +27,7 @@ object CoffeeQunitSbtPlugin extends Plugin
                          naming: (String, Boolean) => String,
                          compile: (File, Seq[String]) => (String, Option[String], Seq[File]),
                          optionsSettings: sbt.SettingKey[Seq[String]]) =
-    (sourceDirectory in Test, resourceManaged in Compile, cacheDirectory, optionsSettings, filesSetting) map {
+    (sourceDirectory in Test, resourceManaged in Compile /* in Test wouldn't work, no mapping*/, cacheDirectory, optionsSettings, filesSetting) map {
       (src, resources, cache, options, files) =>
 
         import java.io._
@@ -88,5 +88,24 @@ object CoffeeQunitSbtPlugin extends Plugin
     TestAssetsCompiler(compilerName, watch, coffeescriptEntryPointsForTests, naming, compileAsset, coffeescriptOptions)
   }
 
-  override lazy val settings: Seq[sbt.Project.Setting[_]] = Seq(coffeescriptEntryPointsForTests <<= (sourceDirectory in Test)(testDir => testDir ** "*.coffee"), resourceGenerators in Compile <+= CoffeescriptCompilerForTests)
+  val deleteCoffeeTestAssets = TaskKey[Unit]("play-coffee-qunit-delete-generated-js")
+  val deleteCoffeeTestAssetsTask = (managedResources in Compile, streams) map { (res, s) =>
+    println(res.foreach{ file =>
+      print(file.name + " ")
+      if (file.name.endsWith(".test.js") || file.name.endsWith(".test.min.js")) {
+        IO.delete(file)
+        println("delete ")
+      } else {
+        println("not delete " )
+      }
+    })
+  }
+
+
+  override lazy val settings: Seq[sbt.Project.Setting[_]] = Seq(
+
+    deleteCoffeeTestAssets <<= deleteCoffeeTestAssetsTask,
+    playStage <<= playStage.dependsOn(deleteCoffeeTestAssets),
+
+    coffeescriptEntryPointsForTests <<= (sourceDirectory in Test)(testDir => testDir ** "*.coffee"), resourceGenerators in Compile <+= CoffeescriptCompilerForTests)
 }
