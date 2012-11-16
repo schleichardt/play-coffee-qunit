@@ -6,10 +6,10 @@ import scala.Some
 object ApplicationBuild extends Build {
 
   val appName = "play-coffee-qunit"
-  val appVersion = "1.0-SNAPSHOT"
+  val appVersion = "0.1-SNAPSHOT"
 
   val appDependencies = Seq(
-    // Add your project dependencies here,
+    "info.schleichardt" %% "play-coffee-qunit" % appVersion
   )
 
   val coffeescriptEntryPointsForTests = SettingKey[PathFinder]("play-coffeescript-entry-points-test")
