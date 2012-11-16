@@ -1,4 +1,5 @@
 set -x
 
-alias sbt="$(pwd)/sbt"
-cd sbt-plugin && sbt publish-local && cd ../plugin && sbt publish-local && cd ../example && sbt test
+export xsbt="$(pwd)/sbt"
+chmod a+x sbt sbtwrapper/sbt-launch.jar
+cd sbt-plugin && $xsbt publish-local && cd ../plugin && $xsbt publish-local && cd ../example && $xsbt test
