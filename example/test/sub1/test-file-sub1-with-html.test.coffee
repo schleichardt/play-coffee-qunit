@@ -1,2 +1,2 @@
-test 'true should be truthy', ->
-  ok(true, 'true is not truthy!')
+test 'test description', ->
+  ok(false, 'assertion message')
