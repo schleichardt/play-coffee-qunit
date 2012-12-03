@@ -101,11 +101,36 @@ object CoffeeQunitSbtPlugin extends Plugin
     })
   }
 
+  //TODO generalize for multiple test scopes
+  val qUnitRunner = sourceManaged in Test map {
+    dir =>
+      val file = dir / "qunit" / "QunitRunner.scala"
+      IO.write(file, """import org.specs2.mutable.Specification
+                       |import play.api.Logger
+                       |import play.api.test.FakeApplication
+                       |import play.api.test.Helpers._
+                       |import play.api.test._
+                       |
+                       |class QUnitTests extends Specification {
+                       |  "QUnit tests" should {
+                       |    "run" in {
+                       |      running(TestServer(3333), HTMLUNIT) { browser =>
+                       |    browser.goTo("http://localhost:3333/@qunit")
+                       |    browser.pageSource must equalTo("needle")
+                       |  }
+                       |    }
+                       |  }
+                       |}
+                       | """.stripMargin)
+      Seq(file)
+  }
 
   override lazy val settings: Seq[sbt.Project.Setting[_]] = Seq(
 
-    deleteCoffeeTestAssets <<= deleteCoffeeTestAssetsTask,
-    playStage <<= playStage.dependsOn(deleteCoffeeTestAssets),
-
-    coffeescriptEntryPointsForTests <<= (sourceDirectory in Test)(testDir => testDir ** "*.coffee"), resourceGenerators in Compile <+= CoffeescriptCompilerForTests)
+      deleteCoffeeTestAssets <<= deleteCoffeeTestAssetsTask,
+      playStage <<= playStage.dependsOn(deleteCoffeeTestAssets),
+      coffeescriptEntryPointsForTests <<= (sourceDirectory in Test)(testDir => testDir ** "*.coffee"),
+      resourceGenerators in Compile <+= CoffeescriptCompilerForTests,
+      sourceGenerators in Test <+= qUnitRunner
+    )
 }
