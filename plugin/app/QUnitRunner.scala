@@ -1,3 +1,4 @@
+import collection.immutable.SortedSet
 import java.io.File
 import java.lang.String
 import java.net.URLEncoder
@@ -32,7 +33,6 @@ abstract class QUnitTestsRunner extends Specification {
   val selectorFailedCounter: String = "#qunit-testresult .failed"
 
 
-  "QUnit tests" should {
     running(TestServer(Port), HTMLUNIT) {
       browser =>
         val testFolder = play.api.Play.current.getFile("/test/")
@@ -42,17 +42,24 @@ abstract class QUnitTestsRunner extends Specification {
             goToQUnitTestPage(browser, file)
             waitUntilJavaScriptTestsFinished(browser)
             val results: Seq[QUnitTestResult] = collectTestResults(browser)
-            for (res <- results) {
-              res.moduleName in {
-                res.testName in {
+
+
+            val modulesInOrder = collection.SortedSet.empty[String] ++ results.map(_.moduleName)
+            val groupedByModuleName = results.groupBy(_.moduleName)
+
+            for (module <- modulesInOrder) {
+              module in {
+                val testsInModule = groupedByModuleName.get(module).get
+                for (res <- testsInModule) {
+                  res.testName in {
                     res must QUnitMatcher
+                  }
                 }
               }
             }
         }
         1 === 1
     }
-  }
 
   def collectTestResults(browser: TestBrowser): Seq[QUnitTestResult] = {
     val testCaseSuccessMessages = browser.$("#qunit-tests > li")

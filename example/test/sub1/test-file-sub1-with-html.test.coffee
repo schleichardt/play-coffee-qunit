@@ -1,4 +1,4 @@
-letTestPass = true #switch for development
+letTestPass = false #switch for development
 
 test 'test description', ->
   ok(letTestPass, 'assertion message')
