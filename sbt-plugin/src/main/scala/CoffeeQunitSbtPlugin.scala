@@ -104,24 +104,9 @@ object CoffeeQunitSbtPlugin extends Plugin
   //TODO generalize for multiple test scopes
   val qUnitRunner = sourceManaged in Test map {
     dir =>
-      val file = dir / "qunit" / "QunitRunner.scala"
-      IO.write(file, """import org.specs2.mutable.Specification
-                       |import play.api.Logger
-                       |import play.api.test.FakeApplication
-                       |import play.api.test.Helpers._
-                       |import play.api.test._
-                       |
-                       |class QUnitTests extends Specification {
-                       |  "QUnit tests" should {
-                       |    "run" in {
-                       |      running(TestServer(3333), HTMLUNIT) { browser =>
-                       |    browser.goTo("http://localhost:3333/@qunit")
-                       |    browser.pageSource must equalTo("needle")
-                       |  }
-                       |    }
-                       |  }
-                       |}
-                       | """.stripMargin)
+      val file = dir / "QunitRunner.scala"
+      IO.write(file, """class QunitRunner extends QUnitTestsRunner
+                       |""".stripMargin)
       Seq(file)
   }
 

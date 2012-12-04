@@ -1,28 +1,18 @@
-import java.io.{File, FilenameFilter}
+import java.io.File
 import java.lang.String
 import java.net.URLEncoder
 import java.util.concurrent.TimeUnit
 import org.fest.assertions.Assertions._
 import org.specs2.mutable.Specification
-import play.api.Logger
-import play.api.test.FakeApplication
 import play.api.test.Helpers._
 import play.api.test._
 import org.apache.commons.io.FileUtils
 import play.api.test.TestServer
+import scala.Array
 import scala.collection.JavaConversions._
-import org.fluentlenium.core.domain._
 
-object ConsoleColors {
-  val Red = "\u001B[31m"
-  val Normal = "\u001B[0m";
-  val Green = "\u001B[32m";
 
-  def red(o: Any) = Red + o + Normal
-  def green(o: Any) = Green + o + Normal
-}
-
-class QUnitTestsRunner extends Specification {
+abstract class QUnitTestsRunner extends Specification {
   import ConsoleColors._
 
   val TestFileExtension = "test.html"

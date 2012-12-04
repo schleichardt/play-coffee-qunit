@@ -9,7 +9,7 @@ object ApplicationBuild extends Build {
     lazy val publishingFolder = Path.userHome.absolutePath+"/Projekte/schleichardt.github.com/jvmrepo"
 
     val appDependencies = Seq(
-      // Add your project dependencies here,
+      "play" %% "play-test" % play.core.PlayVersion.current //make test libs for compile available
     )
 
     val main = PlayProject(appName, appVersion, appDependencies).settings(
