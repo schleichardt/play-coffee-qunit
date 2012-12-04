@@ -4,7 +4,7 @@
 
 # Home page
 GET     /                           controllers.Application.index()
-GET     /@qunit                     controllers.QUnit.index(htmlFile: String ?= "")
+GET     /@qunit                     controllers.QUnit.index(htmlFile: String ?= "", asset: String ?= "")
 
-# Map static resources from the /public folder to the /assets URL path
-GET     /assets/*file               controllers.Assets.at(path="/public", file)
+# not default folder to be independent with assets from routing
+GET     /public/*file               controllers.Assets.at(path="/public", file)
