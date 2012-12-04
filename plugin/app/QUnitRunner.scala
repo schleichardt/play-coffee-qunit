@@ -3,6 +3,7 @@ import java.lang.String
 import java.net.URLEncoder
 import java.util.concurrent.TimeUnit
 import org.fest.assertions.Assertions._
+import org.specs2.matcher.{Expectable, Matcher, MatchFailure}
 import org.specs2.mutable.Specification
 import play.api.test.Helpers._
 import play.api.test._
@@ -11,6 +12,16 @@ import play.api.test.TestServer
 import scala.Array
 import scala.collection.JavaConversions._
 
+object QUnitMatcher extends Matcher[QUnitTestResult] {
+  def apply[S <: QUnitTestResult](s: Expectable[S]) = {
+    result(s.value.failedCount < 1,
+      s.description + " +++++++++++",
+      s.value.assertionErrors.mkString("\n"),
+      s)
+  }
+}
+
+case class QUnitTestResult(moduleName: String, testName: String, failedCount: Int, passedCount: Int, assertionErrors: Seq[String])
 
 abstract class QUnitTestsRunner extends Specification {
   import ConsoleColors._
@@ -22,50 +33,43 @@ abstract class QUnitTestsRunner extends Specification {
 
 
   "QUnit tests" should {
-    "run with selenium" in {
-      running(TestServer(Port), HTMLUNIT) {
-        browser =>
-          val testFolder = play.api.Play.current.getFile("/test/")
-          val testFiles = FileUtils.listFiles(testFolder, Array(TestFileExtension), true)
-          testFiles foreach {
-            file =>
-              goToQUnitTestPage(browser, file)
-              waitUntilJavaScriptTestsFinished(browser)
-              val log = collectConsoleOutput(browser)
-              assertThat(browser.$(selectorFailedCounter, 0).getText).overridingErrorMessage(log.toString).isEqualTo("0")
-          }
-          1 === 1
-      }
+    running(TestServer(Port), HTMLUNIT) {
+      browser =>
+        val testFolder = play.api.Play.current.getFile("/test/")
+        val testFiles = FileUtils.listFiles(testFolder, Array(TestFileExtension), true)
+        testFiles foreach {
+          file =>
+            goToQUnitTestPage(browser, file)
+            waitUntilJavaScriptTestsFinished(browser)
+            val results: Seq[QUnitTestResult] = collectTestResults(browser)
+            for (res <- results) {
+              res.moduleName in {
+                res.testName in {
+                    res must QUnitMatcher
+                }
+              }
+            }
+        }
+        1 === 1
     }
   }
 
-
-  def collectConsoleOutput(browser: TestBrowser): StringBuilder = {
-    val log = new StringBuilder
+  def collectTestResults(browser: TestBrowser): Seq[QUnitTestResult] = {
     val testCaseSuccessMessages = browser.$("#qunit-tests > li")
-    var lastModuleName = ""
-    testCaseSuccessMessages foreach {
+    val result = testCaseSuccessMessages map {
       listItem =>
         val element = listItem.find("strong")
         val moduleName = element.find(".module-name").headOption map (_.getText()) getOrElse "default module"
-        val haveToWriteModuleName = moduleName != "" && lastModuleName != moduleName
-        if (haveToWriteModuleName) {
-          log ++= moduleName ++= "\n"
-        }
         val testName = element.find(".test-name").headOption map (_.getText()) getOrElse "<no testname>"
         val failedCount = (element.find(".failed").headOption map (_.getText()) getOrElse "<no failed count>").toInt
         val passedCount = (element.find(".passed").headOption map (_.getText()) getOrElse "<no passed count>").toInt
-        val sumAssertions = (failedCount + passedCount).toString
-        log ++= "    " ++= testName ++= " (" ++= red(failedCount) ++= ", " + green(passedCount) ++= ", " ++= sumAssertions ++= ")\n"
-
-        if (failedCount > 0) {
-          log ++= "        "
-          val errorMessages = listItem.find("ol > li") map (_.getText)
-          errorMessages.addString(log, "", "\n        ", "\n")
-        }
-        lastModuleName = moduleName
+        val assertionErrors =
+          if (failedCount > 0) {
+            listItem.find("ol > li") map (_.getText)
+          } else Seq[String]()
+        QUnitTestResult(moduleName, testName, failedCount, passedCount, assertionErrors)
     }
-    log ++= "\n\n"
+    result
   }
 
   def goToQUnitTestPage(browser: TestBrowser, file: File) {
