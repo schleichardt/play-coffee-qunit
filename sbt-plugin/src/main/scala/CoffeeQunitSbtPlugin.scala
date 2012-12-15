@@ -4,7 +4,9 @@ import sbt._
 import sbt.Keys._
 import sbt.PlayExceptions.CompilationException
 import sbt.PlayProject._
-import scala.Some
+import scala.{Array, Some}
+import org.apache.commons.io.FileUtils
+import scala.collection.JavaConversions._
 
 //http://harrah.github.com/xsbt/latest/api/index.html#sbt.Plugin
 object CoffeeQunitSbtPlugin extends Plugin
@@ -110,12 +112,57 @@ object CoffeeQunitSbtPlugin extends Plugin
       Seq(file)
   }
 
+  def testTemplatesIndex = (sourceDirectory: File, srcManaged: File) => {
+
+    val testFiles = FileUtils.listFiles(sourceDirectory, Array("scala.html"), true)
+    val absPathLength: Int = (sourceDirectory.absolutePath + "/views/").length
+    val paths = testFiles.map(_.absolutePath.substring(absPathLength))
+    def toClassName(path: String): String = {
+      val pathElements = path.split("/").toList
+      "views.html" + pathElements.init.mkString(".", ".", ".") + pathElements.last.replace(".scala.html", "")
+    }
+
+
+
+    val export = paths.map(path => toClassName(path)).map(path => """  "%s" -> %s""".format(path, path)).mkString(", ")
+
+
+
+    val file = srcManaged / "QunitTests.scala"
+    IO.write(file,
+      """import play.api.mvc._
+        |object QunitTests extends Controller {
+        |   val testTemplateNameToClassMap = Map(
+        |      %s
+        |   )
+        |
+        |   def index(name: String) = Action { request =>
+        |       val templateOption = testTemplateNameToClassMap.get(name)
+        |       val result = templateOption match {
+        |         case Some(template) => {
+        |           Ok(template())
+        |         }
+        |         case None => {
+        |           NotFound("No test found for " + name)
+        |         }
+        |       }
+        |       result
+        |   }
+        |}
+      """.format(export).stripMargin)
+    Seq(file)
+  }
+
+
+  //TODO is it possible to apply settings only by specific command line arguments or scopes to disable test stuff in staging?
   override lazy val settings: Seq[sbt.Project.Setting[_]] = Seq(
 
       deleteCoffeeTestAssets <<= deleteCoffeeTestAssetsTask,
       playStage <<= playStage.dependsOn(deleteCoffeeTestAssets),
       coffeescriptEntryPointsForTests <<= (sourceDirectory in Test)(testDir => testDir ** "*.coffee"),
       resourceGenerators in Compile <+= CoffeescriptCompilerForTests,
-      sourceGenerators in Test <+= qUnitRunner
+      sourceGenerators in Test <+= qUnitRunner,
+      sourceGenerators in Compile <+= (sourceDirectory in Test, sourceManaged in Compile, templatesTypes, templatesImport) map ScalaTemplates,
+      sourceGenerators in Compile <+= (sourceDirectory in Test, sourceManaged in Compile) map testTemplatesIndex
     )
 }
