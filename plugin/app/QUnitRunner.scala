@@ -90,9 +90,6 @@ abstract class QUnitTestsRunner extends Specification {
   def goToQUnitTestPage(browser: TestBrowser, file: File) {
     val filepath: String = StringUtils.removeStart(file.getPath, "./test/views/")
     val url: String = baseUrl + "?templateName=" + toClassName(filepath)
-    System.err.println("#############################################")
-    System.err.println(filepath)
-    System.err.println(url)
     browser.goTo(url)
   }
 
