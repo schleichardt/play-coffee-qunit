@@ -123,31 +123,23 @@ object CoffeeQunitSbtPlugin extends Plugin
     }
 
 
+    //TODO remove cast
+    val export = paths.map(path => toClassName(path)).map(path => """  "%s" -> %s.asInstanceOf[Template0[Result]]""".format(path, path)).mkString(", ")
 
-    val export = paths.map(path => toClassName(path)).map(path => """  "%s" -> %s""".format(path, path)).mkString(", ")
 
 
-
-    val file = srcManaged / "QunitTests.scala"
+    val file = srcManaged / "controllers" / "QUnit.scala"
     IO.write(file,
-      """import play.api.mvc._
-        |object QunitTests extends Controller {
-        |   val testTemplateNameToClassMap = Map(
+      """package controllers
+        |
+        |import play.api.mvc._
+        |import controllers._
+        |import play.api.templates._
+        |
+        |object QUnit extends QUnitBase {
+        |   val testTemplateNameToClassMap: Map[String, Template0[Result]] = Map(
         |      %s
         |   )
-        |
-        |   def index(name: String) = Action { request =>
-        |       val templateOption = testTemplateNameToClassMap.get(name)
-        |       val result = templateOption match {
-        |         case Some(template) => {
-        |           Ok(template())
-        |         }
-        |         case None => {
-        |           NotFound("No test found for " + name)
-        |         }
-        |       }
-        |       result
-        |   }
         |}
       """.format(export).stripMargin)
     Seq(file)

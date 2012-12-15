@@ -3,6 +3,7 @@ import java.io.File
 import java.lang.String
 import java.net.URLEncoder
 import java.util.concurrent.TimeUnit
+import org.apache.commons.lang3.StringUtils
 import org.fest.assertions.Assertions._
 import org.specs2.matcher.{Expectable, Matcher, MatchFailure}
 import org.specs2.mutable.Specification
@@ -12,6 +13,7 @@ import org.apache.commons.io.FileUtils
 import play.api.test.TestServer
 import scala.Array
 import scala.collection.JavaConversions._
+import scala.Predef._
 
 object QUnitMatcher extends Matcher[QUnitTestResult] {
   def apply[S <: QUnitTestResult](s: Expectable[S]) = {
@@ -27,7 +29,7 @@ case class QUnitTestResult(moduleName: String, testName: String, failedCount: In
 abstract class QUnitTestsRunner extends Specification {
   import ConsoleColors._
 
-  val TestFileExtension = "test.html"
+  val TestFileExtension = "scala.html"
   val Port = 3333
   val baseUrl: String = "http://localhost:" + Port + "/@qunit"
   val selectorFailedCounter: String = "#qunit-testresult .failed"
@@ -79,8 +81,19 @@ abstract class QUnitTestsRunner extends Specification {
     result
   }
 
+  //TODO DRY, duplicate function
+  def toClassName(path: String): String = {
+    val pathElements = path.split("/").toList
+    "views.html" + pathElements.init.mkString(".", ".", ".") + pathElements.last.replace(".scala.html", "")
+  }
+
   def goToQUnitTestPage(browser: TestBrowser, file: File) {
-    browser.goTo(baseUrl + "?htmlFile=" + urlEncode(file.getPath))
+    val filepath: String = StringUtils.removeStart(file.getPath, "./test/views/")
+    val url: String = baseUrl + "?templateName=" + toClassName(filepath)
+    System.err.println("#############################################")
+    System.err.println(filepath)
+    System.err.println(url)
+    browser.goTo(url)
   }
 
   def waitUntilJavaScriptTestsFinished(browser: TestBrowser) {
