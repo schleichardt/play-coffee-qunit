@@ -14,7 +14,7 @@ abstract class QUnitBase extends Controller {
   def index(templateName: String, asset: String) = Action { implicit request =>
     if(templateName != "") {
       testTemplateNameToClassMap.get(templateName) match {
-        case Some(r: Template0[_]) => NotFound(r.render().asInstanceOf[Html]) //TODO remove cast
+        case Some(r: Template0[_]) => Ok(r.render().asInstanceOf[Html])
         case None => NotFound("No test found for " + templateName)
       }
     } else if (asset != "") {

@@ -94,7 +94,7 @@ abstract class QUnitTestsRunner extends Specification {
   }
 
   def waitUntilJavaScriptTestsFinished(browser: TestBrowser) {
-    browser.await.atMost(4, TimeUnit.SECONDS).until(selectorFailedCounter).hasSize(1)
+    browser.await.atMost(4, TimeUnit.SECONDS).until(selectorFailedCounter).hasSize(1)//TODO timeout should be configurable
   }
 
   def urlEncode(s: String): String = {

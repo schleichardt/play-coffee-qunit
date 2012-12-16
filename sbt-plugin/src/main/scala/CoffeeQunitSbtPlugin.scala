@@ -1,4 +1,4 @@
-package info.schleichardt.playcoffeequnit
+package info.schleichardt.playcoffeequnit.sbt
 
 import sbt._
 import sbt.Keys._
@@ -8,20 +8,16 @@ import scala.{Array, Some}
 import org.apache.commons.io.FileUtils
 import scala.collection.JavaConversions._
 
-//http://harrah.github.com/xsbt/latest/api/index.html#sbt.Plugin
+
 object CoffeeQunitSbtPlugin extends Plugin
 {
   val coffeescriptEntryPointsForTests = SettingKey[PathFinder]("play-coffeescript-entry-points-test")
 
-  //TODO remove in stage, remove stuff out of main (resourceManaged in Compile)
-  //http://stackoverflow.com/questions/11845176/how-to-make-a-sbt-task-use-a-specific-configuration-scope
-
-  /* this is mostly copied from
- https://github.com/playframework/Play20/blob/2.0.x/framework/src/sbt-plugin/src/main/scala/PlayCommands.scala#L271
- to let test sources in folder test, I needed {@code sourceDirectory in Test} instead of {@code sourceDirectory in Compile}.
- In addition coffee files does not necessarily to be in test/assets.
-
- TODO: Maybe this can be outsourced into a module.
+  /*
+   this is mostly copied from
+   https://github.com/playframework/Play20/blob/2.0.x/framework/src/sbt-plugin/src/main/scala/PlayCommands.scala#L271
+   to let test sources in folder test, I needed {@code sourceDirectory in Test} instead of {@code sourceDirectory in Compile}.
+   In addition coffee files does not necessarily to be in test/assets.
   */
   def TestAssetsCompiler(name: String,
                          watch: File => PathFinder,
@@ -31,23 +27,19 @@ object CoffeeQunitSbtPlugin extends Plugin
                          optionsSettings: sbt.SettingKey[Seq[String]]) =
     (sourceDirectory in Test, resourceManaged in Compile /* in Test wouldn't work, no mapping*/, cacheDirectory, optionsSettings, filesSetting) map {
       (src, resources, cache, options, files) =>
-
         import java.io._
-
         val cacheFile = cache / name
         val currentInfos = watch(src).get.map(f => f -> FileInfo.lastModified(f)).toMap
         val (previousRelation, previousInfo) = Sync.readInfo(cacheFile)(FileInfo.lastModified.format)
-
-        if (previousInfo != currentInfos) {
-
-          // Delete previous generated files
-          previousRelation._2s.foreach(IO.delete)
-
+        val outOfDate = previousInfo != currentInfos
+        if (outOfDate) {
+          previousRelation._2s.foreach(IO.delete)// Delete previous generated files
           val generated = (files x relativeTo(Seq(src))).flatMap {
             case (sourceFile, name) => {
               val (debug, min, dependencies) = compile(sourceFile, options)
-              val out = new File(resources, "public/" + naming(name, false))
-              val outMin = new File(resources, "public/" + naming(name, true))
+              val targetFolder = "public/"
+              val out = new File(resources, targetFolder + naming(name, false))
+              val outMin = new File(resources, targetFolder + naming(name, true))
               IO.write(out, debug)
               dependencies.map(_ -> out) ++ min.map {
                 minified =>
@@ -56,21 +48,11 @@ object CoffeeQunitSbtPlugin extends Plugin
               }.getOrElse(Nil)
             }
           }
-
-          Sync.writeInfo(cacheFile,
-            Relation.empty[File, File] ++ generated,
-            currentInfos)(FileInfo.lastModified.format)
-
-          // Return new files
-          generated.map(_._2).distinct.toList
-
+          Sync.writeInfo(cacheFile, Relation.empty[File, File] ++ generated, currentInfos)(FileInfo.lastModified.format)
+          generated.map(_._2).distinct.toList// Return new files
         } else {
-
-          // Return previously generated files
-          previousRelation._2s.toSeq
-
+          previousRelation._2s.toSeq// Return previously generated files
         }
-
     }
 
 
@@ -96,9 +78,6 @@ object CoffeeQunitSbtPlugin extends Plugin
       print(file.name + " ")
       if (file.name.endsWith(".test.js") || file.name.endsWith(".test.min.js")) {
         IO.delete(file)
-        println("delete ")
-      } else {
-        println("not delete " )
       }
     })
   }
@@ -107,13 +86,11 @@ object CoffeeQunitSbtPlugin extends Plugin
   val qUnitRunner = sourceManaged in Test map {
     dir =>
       val file = dir / "QunitRunner.scala"
-      IO.write(file, """class QunitRunner extends QUnitTestsRunner
-                       |""".stripMargin)
+      IO.write(file, "class QunitRunner extends QUnitTestsRunner")
       Seq(file)
   }
 
   def testTemplatesIndex = (sourceDirectory: File, srcManaged: File) => {
-
     val testFiles = FileUtils.listFiles(sourceDirectory, Array("scala.html"), true)
     val absPathLength: Int = (sourceDirectory.absolutePath + "/views/").length
     val paths = testFiles.map(_.absolutePath.substring(absPathLength))
@@ -122,11 +99,7 @@ object CoffeeQunitSbtPlugin extends Plugin
       "views.html" + pathElements.init.mkString(".", ".", ".") + pathElements.last.replace(".scala.html", "")
     }
 
-
-    //TODO remove cast
     val export = paths.map(path => toClassName(path)).map(path => """  "%s" -> %s.asInstanceOf[Template0[Result]]""".format(path, path)).mkString(", ")
-
-
 
     val file = srcManaged / "controllers" / "QUnit.scala"
     IO.write(file,
@@ -148,7 +121,6 @@ object CoffeeQunitSbtPlugin extends Plugin
 
   //TODO is it possible to apply settings only by specific command line arguments or scopes to disable test stuff in staging?
   override lazy val settings: Seq[sbt.Project.Setting[_]] = Seq(
-
       deleteCoffeeTestAssets <<= deleteCoffeeTestAssetsTask,
       playStage <<= playStage.dependsOn(deleteCoffeeTestAssets),
       coffeescriptEntryPointsForTests <<= (sourceDirectory in Test)(testDir => testDir ** "*.coffee"),

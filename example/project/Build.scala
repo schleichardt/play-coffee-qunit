@@ -1,7 +1,6 @@
 import sbt._
 import Keys._
 import sbt.PlayProject._
-import scala.Some
 
 object ApplicationBuild extends Build {
 
