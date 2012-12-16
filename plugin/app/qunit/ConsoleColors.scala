@@ -1,3 +1,5 @@
+package qunit
+
 object ConsoleColors {
   val Red = "\u001B[31m"
   val Normal = "\u001B[0m";

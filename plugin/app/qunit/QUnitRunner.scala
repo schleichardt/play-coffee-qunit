@@ -1,9 +1,11 @@
+package qunit
+
 import collection.immutable.SortedSet
 import java.io.File
 import java.lang.String
 import java.net.URLEncoder
 import java.util.concurrent.TimeUnit
-import org.apache.commons.lang3.StringUtils
+import org.apache.commons.lang3.StringUtils._
 import org.fest.assertions.Assertions._
 import org.specs2.matcher.{Expectable, Matcher, MatchFailure}
 import org.specs2.mutable.Specification
@@ -26,22 +28,44 @@ object QUnitMatcher extends Matcher[QUnitTestResult] {
 
 case class QUnitTestResult(moduleName: String, testName: String, failedCount: Int, passedCount: Int, assertionErrors: Seq[String])
 
+object QUnitTestsRunner {
+  val TestFileExtension = "scala.html"
+  lazy val testFolder = play.api.Play.current.getFile("/test/")
+  def testFiles = FileUtils.listFiles(testFolder, Array(TestFileExtension), true)
+
+  //TODO DRY, duplicate function
+  def toClassName(path: String): String = {
+    val pathElements = path.split("/").toList
+    "views.html" + pathElements.init.mkString(".", ".", ".") + pathElements.last.replace(".scala.html", "")
+  }
+
+  def filepath(file: File) =  removeStart(file.getAbsolutePath, testFolder.getAbsolutePath + "/views/")
+
+  def testFileToUrlPath(file: File): String = {
+    "?templateName=" + toClassName(filepath(file))
+  }
+
+  def classUrlPathList = testFiles map {file => testFileToUrlPath(file)}
+
+  def classNameList = testFiles map {file => toClassName(filepath(file))}
+
+  def testFilesNumber = testFiles.size
+}
+
 abstract class QUnitTestsRunner extends Specification {
   import ConsoleColors._
+  import QUnitTestsRunner._
 
-  val TestFileExtension = "scala.html"
-  val Port = 3333
-  val baseUrl: String = "http://localhost:" + Port + "/@qunit"
-  val selectorFailedCounter: String = "#qunit-testresult .failed"
+  lazy val Port = 3333 //TODO port configurable
+  val baseUrl = "http://localhost:" + Port + "/@qunit"
+  val selectorFailedCounter = "#qunit-testresult .failed"
 
 
     running(TestServer(Port), HTMLUNIT) {
       browser =>
-        val testFolder = play.api.Play.current.getFile("/test/")
-        val testFiles = FileUtils.listFiles(testFolder, Array(TestFileExtension), true)
-        testFiles foreach {
-          file =>
-            goToQUnitTestPage(browser, file)
+        classUrlPathList foreach {
+          clazzUrlPath =>
+            browser.goTo(baseUrl + clazzUrlPath)
             waitUntilJavaScriptTestsFinished(browser)
             val results: Seq[QUnitTestResult] = collectTestResults(browser)
 
@@ -79,18 +103,6 @@ abstract class QUnitTestsRunner extends Specification {
         QUnitTestResult(moduleName, testName, failedCount, passedCount, assertionErrors)
     }
     result
-  }
-
-  //TODO DRY, duplicate function
-  def toClassName(path: String): String = {
-    val pathElements = path.split("/").toList
-    "views.html" + pathElements.init.mkString(".", ".", ".") + pathElements.last.replace(".scala.html", "")
-  }
-
-  def goToQUnitTestPage(browser: TestBrowser, file: File) {
-    val filepath: String = StringUtils.removeStart(file.getPath, "./test/views/")
-    val url: String = baseUrl + "?templateName=" + toClassName(filepath)
-    browser.goTo(url)
   }
 
   def waitUntilJavaScriptTestsFinished(browser: TestBrowser) {

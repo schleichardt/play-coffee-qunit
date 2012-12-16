@@ -86,7 +86,9 @@ object CoffeeQunitSbtPlugin extends Plugin
   val qUnitRunner = sourceManaged in Test map {
     dir =>
       val file = dir / "QunitRunner.scala"
-      IO.write(file, "class QunitRunner extends QUnitTestsRunner")
+      IO.write(file,
+        """package qunit
+          | class QunitRunner extends qunit.QUnitTestsRunner""".stripMargin)
       Seq(file)
   }
 

@@ -6,21 +6,38 @@ import play.api._
 import io.Source
 import play.templates.BaseScalaTemplate
 import play.api.templates._
+import qunit.QUnitTestsRunner
+import play.api.Play.current
 
 abstract class QUnitBase extends Controller {
 
   val testTemplateNameToClassMap: Map[String, Template0[Result]]
 
   def index(templateName: String, asset: String) = Action { implicit request =>
-    if(templateName != "") {
-      testTemplateNameToClassMap.get(templateName) match {
-        case Some(r: Template0[_]) => Ok(r.render().asInstanceOf[Html])
-        case None => NotFound("No test found for " + templateName)
-      }
+    if (play.api.Play.isProd) {
+      NotFound
+    } else if(templateName != "") {
+      runTest(templateName)
     } else if (asset != "") {
-      controllers.Assets.at(path="/public", file=asset)(request)
+      loadAsset(asset, request)
     } else {
-      Ok("needle")
+      if (QUnitTestsRunner.testFilesNumber == 1) {
+        runTest(QUnitTestsRunner.classNameList.head)
+      } else {
+        Ok(views.html.qunit.index())
+      }
+    }
+  }
+
+
+  def loadAsset(asset: String, request: Request[AnyContent]) = {
+    controllers.Assets.at(path = "/public", file = asset)(request)
+  }
+
+  def runTest(templateName: String) = {
+    testTemplateNameToClassMap.get(templateName) match {
+      case Some(r: Template0[_]) => Ok(r.render().asInstanceOf[Html])
+      case None => NotFound("No test found for " + templateName)
     }
   }
 }
