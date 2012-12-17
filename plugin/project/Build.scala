@@ -5,7 +5,7 @@ import PlayProject._
 object ApplicationBuild extends Build {
 
     val appName         = "play-coffee-qunit"
-    val appVersion      = "0.1-SNAPSHOT"
+    val appVersion      = "0.2-SNAPSHOT"
     lazy val publishingFolder = Path.userHome.absolutePath+"/Projekte/schleichardt.github.com/jvmrepo"
 
     val appDependencies = Seq(
