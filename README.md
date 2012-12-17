@@ -3,15 +3,14 @@ A plugin to write QUnit tests with CoffeeScript and run tests in browser or in c
 It is a spare time project. Use it a your own risk. Support can be dropped at any time and APIs may change.
 For now it is for play 2.0.4.
 
-## Licence
+## Features
+* for play 2.0.4
+* only one route to set
+* can be used with CoffeeScript or JavaScript
+* app test files only in test folder and not mixed in public or app folder
+* use Scala template engine to write tests, so you can re use your tags
+* runs in console and in browser
 
-This software is licensed under the Apache 2 license, quoted below.
-
-Copyright 2012 schleichardt
-
-Licensed under the Apache License, Version 2.0 (the "License"); you may not use this project except in compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0.
-
-Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
 
 ## Run tests
 * `play test` to run QUnit tests in the console
@@ -34,3 +33,23 @@ Unless required by applicable law or agreed to in writing, software distributed 
 * add to your project/Build.scala the dependency: `"info.schleichardt" %% "play-coffee-qunit" % "0.2-SNAPSHOT"`
 * add to your project/plugins.sbt `addSbtPlugin("info.schleichardt" % "coffee-qunit-sbt-plugin" % "0.2-SNAPSHOT")`
 * add to your routes: `GET /@qunit controllers.QUnit.index(templateName: String ?= "", asset: String ?= "")`
+
+## Licence
+
+This software is licensed under the Apache 2 license, quoted below.
+
+Copyright 2012 schleichardt
+
+Licensed under the Apache License, Version 2.0 (the "License"); you may not use this project except in compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0.
+
+Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
+
+## Inspirations
+* https://github.com/playframework/Play20
+    * how to compile CoffeeScript files
+* https://github.com/irregular-at/play-qunit Apache 2 licence, only for play 1
+    * idea to use template engine to write tests
+    * use /@qunit as url
+* https://github.com/jameslowry/play2-qunit
+* https://github.com/gcusnieux/play20-qunit
+    * how to visualize test results in console
