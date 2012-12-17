@@ -1,6 +1,6 @@
 # play-coffee-qunit
 A plugin to write QUnit tests with CoffeeScript and run tests in browser or in console.
-It is a spare time project.
+It is a spare time project. Use it a your own risk. Support can be dropped at any time and APIs may change.
 For now it is for play 2.0.4.
 
 ## Licence
