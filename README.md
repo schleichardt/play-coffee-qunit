@@ -19,7 +19,12 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 ## Create tests
 * drop a scala template in the folder test/views of your project, i.e. test/views/test/sub1/sub2/test1.scala.html
-    * a template helper is planned, for now add something like that to the template: https://github.com/schleichardt/play-coffee-qunit/blob/master/example/test/views/test/sub1/sub2/test1.scala.html
+    @qunit.test {
+       <script src="/public/path/file-containing-qunit-tests.test.js"></script>
+    } {
+      <div>optional stuff in body</div>
+    }
+
 * see the example app https://github.com/schleichardt/play-coffee-qunit/tree/master/example
 
 ## Installation
