@@ -33,3 +33,4 @@ Unless required by applicable law or agreed to in writing, software distributed 
 # (b) add a resolver for evaluation purposes to your settings in Build.scala: ` resolvers += "schleichardts Github" at "http://schleichardt.github.com/jvmrepo/"`
 # add to your project/Build.scala the dependency: `"info.schleichardt" %% "play-coffee-qunit" % "0.2-SNAPSHOT"`
 # add to your project/plugins.sbt `addSbtPlugin("info.schleichardt" % "coffee-qunit-sbt-plugin" % "0.2-SNAPSHOT")`
+# add to your routes: `GET /@qunit controllers.QUnit.index(templateName: String ?= "", asset: String ?= "")`
