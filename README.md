@@ -30,12 +30,10 @@ For now it is for play 2.0.4.
 ## Installation
 * (a) fork this repo and publish local with sbt (play and SBT use different local repos, so use SBT)
     * `cd sbt-plugin && sbt publish-local && cd ../plugin && sbt publish-local`, start the tests with `sbt test`
-* add to your project/Build.scala the dependency: `"info.schleichardt" %% "play-coffee-qunit" % "0.3-SNAPSHOT"`
-* add to your project/plugins.sbt ```
-resolvers += "schleichardts Github" at "http://schleichardt.github.com/jvmrepo/"
-
-addSbtPlugin("info.schleichardt" % "coffee-qunit-sbt-plugin" % "0.3-SNAPSHOT")```
+* (b) only for evaluation: add to your project/plugins.sbt `resolvers += "schleichardts Github" at "http://schleichardt.github.com/jvmrepo/"`
+* add to your project/plugins.sbt `addSbtPlugin("info.schleichardt" % "coffee-qunit-sbt-plugin" % "0.3-SNAPSHOT")`
 * add to your routes: `GET /@qunit controllers.QUnit.index(templateName: String ?= "", asset: String ?= "")`
+* add to your project/Build.scala the dependency: `"info.schleichardt" %% "play-coffee-qunit" % "0.3-SNAPSHOT"`
 
 ## Licence
 
