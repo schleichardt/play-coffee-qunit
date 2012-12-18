@@ -30,7 +30,7 @@ For now it is for play 2.0.4.
 ## Installation
 * (a) fork this repo and publish local with sbt (play and SBT use different local repos, so use SBT)
     * `cd sbt-plugin && sbt publish-local && cd ../plugin && sbt publish-local`, start the tests with `sbt test`
-* (b) PLANNED for later: add a resolver for evaluation purposes to your settings in Build.scala: ` resolvers += "schleichardts Github" at "http://schleichardt.github.com/jvmrepo/"`
+* add to your project/Build.scala the dependency: `"info.schleichardt" %% "play-coffee-qunit" % "0.3-SNAPSHOT"`
 * add to your project/plugins.sbt ```
 resolvers += "schleichardts Github" at "http://schleichardt.github.com/jvmrepo/"
 
