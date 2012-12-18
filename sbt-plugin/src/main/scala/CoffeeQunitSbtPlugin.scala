@@ -129,6 +129,8 @@ object CoffeeQunitSbtPlugin extends Plugin
       resourceGenerators in Compile <+= CoffeescriptCompilerForTests,
       sourceGenerators in Test <+= qUnitRunner,
       sourceGenerators in Compile <+= (sourceDirectory in Test, sourceManaged in Compile, templatesTypes, templatesImport) map ScalaTemplates,
-      sourceGenerators in Compile <+= (sourceDirectory in Test, sourceManaged in Compile) map testTemplatesIndex
+      sourceGenerators in Compile <+= (sourceDirectory in Test, sourceManaged in Compile) map testTemplatesIndex,
+      resolvers += "schleichardts Github" at "http://schleichardt.github.com/jvmrepo/",
+      libraryDependencies +=  "info.schleichardt" %% "play-coffee-qunit" % appVersion
     )
 }
