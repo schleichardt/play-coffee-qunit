@@ -45,11 +45,16 @@ Licensed under the Apache License, Version 2.0 (the "License"); you may not use 
 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
 
 ## Inspirations
+* https://github.com/playframework/play
+    * Apache 2 license
+    * testrunner code
 * https://github.com/playframework/Play20
+    * Apache 2 license, Copyright 2012 Typesafe (http://www.typesafe.com).
     * how to compile CoffeeScript files
-* https://github.com/irregular-at/play-qunit Apache 2 licence, only for play 1
+* https://github.com/irregular-at/play-qunit only for play 1
+    * Apache 2 license
     * idea to use template engine to write tests
     * use /@qunit as url
-* https://github.com/jameslowry/play2-qunit
+    * run differen QUnit tests in browser, layout browser runner
 * https://github.com/gcusnieux/play20-qunit
     * how to visualize test results in console
