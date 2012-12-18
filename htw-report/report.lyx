@@ -35,8 +35,8 @@
 \pdf_bookmarksopen false
 \pdf_bookmarksopenlevel 1
 \pdf_breaklinks true
-\pdf_pdfborder false
-\pdf_colorlinks false
+\pdf_pdfborder true
+\pdf_colorlinks true
 \pdf_backref false
 \pdf_pdfusetitle true
 \papersize a4paper
@@ -76,6 +76,10 @@
 Developing a CoffeeScript QUnit module for Play Framework 2.0.4
 \end_layout
 
+\begin_layout Standard
+
+\end_layout
+
 \begin_layout Author
 Michael Schleichardt
 \end_layout
@@ -89,10 +93,97 @@ Terms
 \end_layout
 
 \begin_layout Standard
-The Play Framework is a Scala Web Framework with a Java and a Scala API.
- CoffeeScript is a language that compiles into JavaScript but has a nicer
- syntax and helps you to not get caught in many JavaScripts traps.
- QUnit is a JavaScript unit test suite.
+The Play Framework
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+\begin_inset CommandInset href
+LatexCommand href
+target "http://www.playframework.org"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+ is a highly productive Scala Web Framework with a Java and a Scala API.
+ It is used by the business social network LinkedIn with the Java API
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+\begin_inset CommandInset href
+LatexCommand href
+target "http://typesafe.com/public/case-studies/LinkedInCase_v8.pdf"
+
+\end_inset
+
+ accessed 12/18/2012
+\end_layout
+
+\end_inset
+
+ and by the British newspaper Guardian with the Scala API
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+\begin_inset CommandInset href
+LatexCommand href
+target "https://github.com/guardian/frontend"
+
+\end_inset
+
+ accessed 12/18/2012
+\end_layout
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+CoffeeScript
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+\begin_inset CommandInset href
+LatexCommand href
+target "http://coffeescript.org"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+ is a language that compiles into JavaScript but has a nicer syntax and
+ helps you to not get caught in many JavaScripts traps.
+\end_layout
+
+\begin_layout Standard
+QUnit
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+\begin_inset CommandInset href
+LatexCommand href
+target "http://qunitjs.com"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+ is a JavaScript unit test suite used by jQuery.
  An example of a QUnit screen is in 
 \begin_inset CommandInset ref
 LatexCommand formatted
@@ -173,6 +264,57 @@ The module should be easy to install and to configure.
 
 \begin_layout Subsection
 Similar modules
+\end_layout
+
+\begin_layout Standard
+- planned for January -
+\end_layout
+
+\begin_layout Section
+Implementation
+\end_layout
+
+\begin_layout Subsection
+Architecture overview
+\end_layout
+
+\begin_layout Standard
+Play Framework Applications are build with SBT (Simple Build Tool).
+ SBT is recursive, every software project can have a folder named 
+\begin_inset Quotes eld
+\end_inset
+
+project
+\begin_inset Quotes erd
+\end_inset
+
+ with build definitions in it.
+ Build definitions in SBT are in Scala, so the build definition is a software
+ project, too.
+ As a result the build definitions itself can have a folder named 
+\begin_inset Quotes eld
+\end_inset
+
+project
+\begin_inset Quotes erd
+\end_inset
+
+ with build definitions in it to build the build definitions for the main
+ project.
+ The build definition for a project may resolves dependencies for it's applicati
+on, but does not share them.
+ The over way round does not work either, if the build definition has a
+ dependency the application cannot access it.
+ Consequently the main application and it's build scripts are strictly seperated
+ projects, one can not simply build one module to change the build of a
+ project and provide classes that the application can use.
+\end_layout
+
+\begin_layout Standard
+The solution of this problem is to build two modules.
+ One SBT plugin that is able to compile CoffeeScript files in the test folder
+ to JavaScript files and a Play Framework plugin that provides controllers,
+ models and views.
 \end_layout
 
 \begin_layout Standard
