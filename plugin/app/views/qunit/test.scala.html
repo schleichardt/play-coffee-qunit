@@ -1,5 +1,8 @@
 @(body: Html = Html.empty)
 
+@import play.api.Play.current
+@import play.api.Play.isTest
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -7,6 +10,10 @@
     <title>QUnit</title>
     <link rel="stylesheet" href="/@@qunit?asset=qunit.css">
     <script src="/@@qunit?asset=qunit.js"></script>
+@* test mode does not work with testresult,js *@
+@if(!isTest) {
+    <script src="/@@qunit?asset=testresult.js" type="text/javascript" charset="utf-8"></script>
+}
 </head>
 <body>
     <div id="qunit"></div>

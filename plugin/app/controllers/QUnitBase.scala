@@ -8,6 +8,7 @@ import play.templates.BaseScalaTemplate
 import play.api.templates._
 import qunit.QUnitTestsRunner
 import play.api.Play.current
+import qunit.QUnitTestsRunner._
 
 abstract class QUnitBase extends Controller {
 
@@ -21,11 +22,7 @@ abstract class QUnitBase extends Controller {
     } else if (asset != "") {
       loadAsset(asset, request)
     } else {
-      if (QUnitTestsRunner.testFilesNumber == 1) {
-        runTest(QUnitTestsRunner.classNameList.head)
-      } else {
-        Ok(views.html.qunit.index())
-      }
+      Ok(views.html.qunit.index(classUrlPathList, classNameList))
     }
   }
 

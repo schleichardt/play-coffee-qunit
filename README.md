@@ -17,10 +17,11 @@ For now it is for play 2.0.4.
 * `play ~run` and open http://localhost:9000/@qunit in your browser
 
 ## Create tests
-* drop a scala template in the folder test/views of your project, i.e. test/views/test/sub1/sub2/test1.scala.html
+* put your CoffeeScript QUnit test in the test folder
+* put a scala template in the folder test/views of your project, i.e. test/views/test/sub1/sub2/test1.scala.html and load the test script
 * <pre>
 ```@qunit.test {
-      <script src="/public/sub1/test-file-sub1-with-html.test.js"></script>
+      <script src="/public/sub1/test-file-sub1-with-html.test.js"></script> @* load your CoffeeScript QUnit test as JavaScript*@
       <div id="some-element">stuff in body</div>
 }
 ```</pre>

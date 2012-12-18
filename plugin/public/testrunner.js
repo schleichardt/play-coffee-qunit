@@ -103,34 +103,32 @@ $(function() {
      * Posts back the result, so that the server writes an xunit file
      */
     var writeXUnit = function(testId, result, callback) {
-        //XUNIT not supported
+        result.browser = browser;
+        result.test = testId;
 
-//        result.browser = browser;
-//        result.test = testId;
-//
-//        $.each(result.tests, function(test) {
-//            if(typeof this.actual === 'object') {
-//                this.actual = this.actual.toString()
-//            }
-//            if(typeof this.expected === 'object') {
-//                this.expected = this.expected.toString()
-//            }
-//        });
-//        $.ajax({
-//                url : baseURL() + '/result',
-//                type : 'POST',
-//                data : {"result" : JSON.stringify(result)},
-//                dataType : 'json',
-//                error : function() {
-//                    if(typeof console !== 'undefined') {
-//                        console.log('error');
-//                    }
-//                    callback(arguments);
-//                },
-//                success : function() {
-//                    callback(arguments);
-//                }
-//        });
+        $.each(result.tests, function(test) {
+            if(typeof this.actual === 'object') {
+                this.actual = this.actual.toString()
+            }
+            if(typeof this.expected === 'object') {
+                this.expected = this.expected.toString()
+            }
+        });
+        $.ajax({
+                url : baseURL() + '?result',
+                type : 'POST',
+                data : {"result" : JSON.stringify(result)},
+                dataType : 'json',
+                error : function() {
+                    if(typeof console !== 'undefined') {
+                        console.log('error');
+                    }
+                    callback(arguments);
+                },
+                success : function() {
+                    callback(arguments);
+                }
+        });
     };
 
     /**
