@@ -15,6 +15,7 @@ import org.apache.commons.io.FileUtils
 import play.api.test.TestServer
 import scala.Array
 import scala.collection.JavaConversions._
+import scala.collection.JavaConverters._
 import scala.Predef._
 
 object QUnitMatcher extends Matcher[QUnitTestResult] {
@@ -31,7 +32,7 @@ case class QUnitTestResult(moduleName: String, testName: String, failedCount: In
 object QUnitTestsRunner {
   val TestFileExtension = "scala.html"
   lazy val testFolder = play.api.Play.current.getFile("/test/")
-  def testFiles = FileUtils.listFiles(testFolder, Array(TestFileExtension), true)
+  def testFiles = FileUtils.listFiles(testFolder, Array(TestFileExtension), true).toList.sortWith((left, right) => left.getAbsolutePath < right.getAbsolutePath)
 
   //TODO DRY, duplicate function
   def toClassName(path: String): String = {
