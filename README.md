@@ -18,18 +18,18 @@ For now it is for play 2.0.4.
 
 ## Create tests
 * drop a scala template in the folder test/views of your project, i.e. test/views/test/sub1/sub2/test1.scala.html
-<pre>`@qunit.test {
-  <script src="/public/sub1/test-file-sub1-with-html.test.js"></script>
-  <div id="some-element">stuff in body</div>
+* <pre>
+```@qunit.test {
+      <script src="/public/sub1/test-file-sub1-with-html.test.js"></script>
+      <div id="some-element">stuff in body</div>
 }
-
-`</pre>
+```</pre>
 * see the example app https://github.com/schleichardt/play-coffee-qunit/tree/master/example
 
 ## Installation
 * (a) fork this repo and publish local with sbt (play and SBT use different local repos, so use SBT)
     * `cd sbt-plugin && sbt publish-local && cd ../plugin && sbt publish-local`, start the tests with `sbt test`
-* (b) add a resolver for evaluation purposes to your settings in Build.scala: ` resolvers += "schleichardts Github" at "http://schleichardt.github.com/jvmrepo/"`
+* (b) PLANNED for later: add a resolver for evaluation purposes to your settings in Build.scala: ` resolvers += "schleichardts Github" at "http://schleichardt.github.com/jvmrepo/"`
 * add to your project/Build.scala the dependency: `"info.schleichardt" %% "play-coffee-qunit" % "0.2-SNAPSHOT"`
 * add to your project/plugins.sbt `addSbtPlugin("info.schleichardt" % "coffee-qunit-sbt-plugin" % "0.2-SNAPSHOT")`
 * add to your routes: `GET /@qunit controllers.QUnit.index(templateName: String ?= "", asset: String ?= "")`
