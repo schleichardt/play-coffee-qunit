@@ -8,6 +8,4 @@ resolvers += "Typesafe repository" at "http://repo.typesafe.com/typesafe/release
 addSbtPlugin("play" % "sbt-plugin" % "2.0.4")
 
 
-resolvers += "schleichardts Github" at "http://schleichardt.github.com/jvmrepo/"
-
 addSbtPlugin("info.schleichardt" % "coffee-qunit-sbt-plugin" % "0.3-SNAPSHOT")
