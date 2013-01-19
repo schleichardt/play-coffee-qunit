@@ -1,0 +1,3 @@
+@(fileName: String)
+
+<script @if(fileName.endsWith("coffee")){type="text/coffeescript"} src="/@@qunit?testFile=@fileName"></script>
