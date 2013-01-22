@@ -49,26 +49,26 @@
 	/**
 	 * Called for every finished QUnit test
 	 */
-//	window.QUnit.testDone = function(result) {
-//
-//        console.log("test done");
-//
-//		var runtime = new Date().getTime() - lastStart;
-//		var test = {
-//			name : result.name,
-//			result : (result.failed > 0) ? false : true,
-//			runtime : runtime
-//		};
-//		if (test.result === false) {
-//			test.actual = lastFailed.actual;
-//			test.expected = lastFailed.expected;
-//			test.message = lastFailed.message;
-//			test.source = $('.fail:last')
-//				.find('.test-source pre')
-//				.html();
-//		}
-//		tests.push(test);
-//	};
+	window.QUnit.testDone = function(result) {
+
+        console.log("test done");
+
+		var runtime = new Date().getTime() - lastStart;
+		var test = {
+			name : result.name,
+			result : (result.failed > 0) ? false : true,
+			runtime : runtime
+		};
+		if (test.result === false) {
+			test.actual = lastFailed.actual;
+			test.expected = lastFailed.expected;
+			test.message = lastFailed.message;
+			test.source = $('.fail:last')
+				.find('.test-source pre')
+				.html();
+		}
+		tests.push(test);
+	};
 	
 	/**
 	 * Called from QUnit when the whole test file is finished

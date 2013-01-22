@@ -139,7 +139,10 @@ $ ->
     $.each result.tests, (index, test) ->
       html += "<tr>" + "<td width=\"20%\" class=\"" + ((if (test.result) then "passed" else "failed")) + "\" valign=\"top\">" + "<span>" + test.name + "</span>" + "</td>" + "<td valign=\"top\">"
       if test.result is false
-        html += "<strong class=\"error\">" + test.message + "</strong>" + "<table class=\"failure\"><tbody>" + "<tr><td class=\"description\">Expected:</td><td>" + test.expected + "</td></tr>" + "<tr class=\"error\"><td class=\"description\">Actual:</td><td>" + test.actual + "</td></tr>" + "<tr><td class=\"description\">Source:</td><td>" + test.source + "</td></tr>" + "</tbody></table>"
+        expectedAndActual = ""
+        if test.expected && test.actual
+          expectedAndActual = "<tr><td class=\"description\">Expected:</td><td>" + test.expected + "</td></tr>" + "<tr class=\"error\"><td class=\"description\">Actual:</td><td>" + test.actual + "</td></tr>"
+        html += "<strong class=\"error\">" + test.message + "</strong>" + "<table class=\"failure\"><tbody>" + expectedAndActual + "</tbody></table>"
       else
         html += "<strong class=\"success\">Ok</strong>"
       html += "</td></tr>"
