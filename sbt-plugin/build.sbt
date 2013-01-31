@@ -15,4 +15,37 @@ addSbtPlugin("play" % "sbt-plugin" % "2.0.4")
 
 publishMavenStyle := true
 
-publishTo := Option(Resolver.file("file",  new File(Path.userHome.absolutePath+"/Projekte/schleichardt.github.com/jvmrepo"))(Resolver.mavenStylePatterns))
+publishArtifact in Test := false
+
+publishTo <<= version { (v: String) =>
+val nexus = "https://oss.sonatype.org/"
+if (v.trim.endsWith("SNAPSHOT"))
+  Some("snapshots" at nexus + "content/repositories/snapshots")
+else
+  Some("releases"  at nexus + "service/local/staging/deploy/maven2")
+}
+
+pomIncludeRepository := { _ => false }
+
+pomExtra := (
+    <url>https://github.com/schleichardt/play-coffee-qunit</url>
+    <licenses>
+    <license>
+      <name>Apache 2</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0</url>
+      <distribution>repo</distribution>
+    </license>
+    </licenses>
+    <scm>
+    <url>git@github.com:schleichardt/play-coffee-qunit.git</url>
+    <connection>scm:git:git@github.com:schleichardt/play-coffee-qunit.git</connection>
+    </scm>
+    <developers>
+    <developer>
+      <id>schleichardt</id>
+      <name>Michael Schleichardt</name>
+      <url>http://michael.schleichardt.info</url>
+    </developer>
+    </developers>
+)
+
