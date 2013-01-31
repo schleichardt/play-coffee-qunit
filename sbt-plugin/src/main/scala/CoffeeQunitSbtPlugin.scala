@@ -53,6 +53,6 @@ object CoffeeQunitSbtPlugin extends Plugin
   override lazy val settings: Seq[sbt.Project.Setting[_]] = Seq(
       sourceGenerators in Test <+= qUnitRunner,
       sourceGenerators in Compile <+= (sourceDirectory in Test, sourceManaged in Compile, templatesTypes, templatesImport) map ScalaTemplates,
-      sourceGenerators in Compile <+= (sourceDirectory in Test, sourceManaged in Compile) map testTemplatesIndex,
+      sourceGenerators in Compile <+= (sourceDirectory in Test, sourceManaged in Compile) map testTemplatesIndex
     )
 }
