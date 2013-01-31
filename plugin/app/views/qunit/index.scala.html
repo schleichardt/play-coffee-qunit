@@ -55,7 +55,7 @@
             @classUrlPathList.zip(classNameList).map { item =>
                 <li>
                     <div class="test" id="@item._2.replace(".", "-")">
-                        <span class="touch">+</span><a href="@item._1" title="click to (un)select test and then press 'Start!'">@item._2</a>
+                        <span class="touch">+</span><a href="@item._1" title="click to (un)select test and then press 'Start!'">@removeStart(item._2, "views.html.test.")</a>
                         <div class="testResult"></div>
                     </div>
                 </li>
