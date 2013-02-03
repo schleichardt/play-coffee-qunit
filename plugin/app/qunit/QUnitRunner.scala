@@ -40,7 +40,8 @@ object QUnitTestsRunner {
   //TODO DRY, duplicate function
   def toClassName(path: String): String = {
     val pathElements = path.split("/").toList
-    "views.html" + pathElements.init.mkString(".", ".", ".") + pathElements.last.replace(".scala.html", "")
+    val result = ("views.html." + pathElements.mkString(".")).replace(".scala.html", "")
+    result
   }
 
   def filepath(file: File) =  removeStart(file.getAbsolutePath, testFolder.getAbsolutePath + "/views/")

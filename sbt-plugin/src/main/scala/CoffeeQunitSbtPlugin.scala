@@ -23,17 +23,20 @@ object CoffeeQunitSbtPlugin extends Plugin
     }
   }
 
+  def templatePathoToClassName(path: String): String = {
+    val pathElements = path.split("/").toList
+    val result = ("views.html." + pathElements.mkString(".")).replace(".scala.html", "")
+    result
+  }
+
   def testTemplatesIndex = (testSrc: File, srcManaged: File) => {
     import java.util.Collections
     val testFiles = if(testSrc.exists && testSrc.isDirectory) { FileUtils.listFiles(testSrc, Array("scala.html"), true) } else {Collections.emptyList()}
     val absPathLength: Int = (testSrc.absolutePath + "/views/").length
     val paths = testFiles.map(_.absolutePath.substring(absPathLength))
-    def toClassName(path: String): String = {
-      val pathElements = path.split("/").toList
-      "views.html" + pathElements.init.mkString(".", ".", ".") + pathElements.last.replace(".scala.html", "")
-    }
 
-    val export = paths.map(path => toClassName(path)).map(path => """  "%s" -> %s.asInstanceOf[Template0[Result]]""".format(path, path)).mkString(", ")
+
+    val export = paths.map(path => templatePathoToClassName(path)).map(path => """  "%s" -> %s.asInstanceOf[Template0[Result]]""".format(path, path)).mkString(", ")
 
     val file = srcManaged / "controllers" / "QUnit.scala"
     IO.write(file,

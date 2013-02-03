@@ -9,6 +9,8 @@ version := "0.3-SNAPSHOT"
 // Comment to get more information during initialization
 logLevel := Level.Warn
 
+libraryDependencies += "org.specs2" %% "specs2" % "1.9" % "test"
+
 resolvers += "Typesafe repository" at "http://repo.typesafe.com/typesafe/releases/"
 
 addSbtPlugin("play" % "sbt-plugin" % "2.0.4")
