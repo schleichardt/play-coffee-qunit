@@ -12,7 +12,7 @@ import scala.collection.JavaConversions._
 object CoffeeQunitSbtPlugin extends Plugin
 {
   def qUnitRunner = (testSrc: File, srcManaged: File) => {
-    if(testSrc.exists()) {
+    if(testSrc.exists) {
       val file = srcManaged / "QunitRunner.scala"
       IO.write(file,
         """package qunit
@@ -25,7 +25,7 @@ object CoffeeQunitSbtPlugin extends Plugin
 
   def testTemplatesIndex = (testSrc: File, srcManaged: File) => {
     import java.util.Collections
-    val testFiles = if(testSrc.exists()) { FileUtils.listFiles(testSrc, Array("scala.html"), true) } else {Collections.emptyList()}
+    val testFiles = if(testSrc.exists && testSrc.isDirectory) { FileUtils.listFiles(testSrc, Array("scala.html"), true) } else {Collections.emptyList()}
     val absPathLength: Int = (testSrc.absolutePath + "/views/").length
     val paths = testFiles.map(_.absolutePath.substring(absPathLength))
     def toClassName(path: String): String = {

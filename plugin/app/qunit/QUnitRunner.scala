@@ -32,7 +32,10 @@ case class QUnitTestResult(moduleName: String, testName: String, failedCount: In
 object QUnitTestsRunner {
   val TestFileExtension = "scala.html"
   lazy val testFolder = play.api.Play.current.getFile("/test/")
-  def testFiles = FileUtils.listFiles(testFolder, Array(TestFileExtension), true).toList.sortWith((left, right) => left.getAbsolutePath < right.getAbsolutePath)
+  def testFiles = {
+    val testFilesUnsorted = if(testFolder.exists && testFolder.isDirectory) FileUtils.listFiles(testFolder, Array(TestFileExtension), true).toList else List[File]()
+    testFilesUnsorted.sortWith((left, right) => left.getAbsolutePath < right.getAbsolutePath)
+  }
 
   //TODO DRY, duplicate function
   def toClassName(path: String): String = {
