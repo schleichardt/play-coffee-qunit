@@ -49,10 +49,9 @@ object CoffeeQunitSbtPlugin extends Plugin
     Seq(file)
   }
 
-
-  override lazy val settings: Seq[sbt.Project.Setting[_]] = Seq(
-      sourceGenerators in Test <+= qUnitRunner,
-      sourceGenerators in Compile <+= (sourceDirectory in Test, sourceManaged in Compile, templatesTypes, templatesImport) map ScalaTemplates,
-      sourceGenerators in Compile <+= (sourceDirectory in Test, sourceManaged in Compile) map testTemplatesIndex
-    )
+  def buildPipelineSettings(testScope: Configuration = Test, compileScope: Configuration = Compile): Seq[Project.Setting[_]] = Seq(
+    sourceGenerators in testScope <+= qUnitRunner,
+    sourceGenerators in compileScope <+= (sourceDirectory in testScope, sourceManaged in compileScope, templatesTypes, templatesImport) map ScalaTemplates,
+    sourceGenerators in compileScope <+= (sourceDirectory in testScope, sourceManaged in compileScope) map testTemplatesIndex
+  )
 }
