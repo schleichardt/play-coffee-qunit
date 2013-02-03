@@ -28,14 +28,23 @@ For now it is for play 2.0.4.
 * see the example app https://github.com/schleichardt/play-coffee-qunit/tree/master/example
 
 ## Installation
-* (a) fork this repo and publish local with sbt (play and SBT use different local repos, so use SBT)
-    * `cd sbt-plugin && sbt publish-local && cd ../plugin && sbt publish-local`, start the tests with `sbt test`
-* (b) only for evaluation
-    * add to your project/plugins.sbt `resolvers += "schleichardts Github" at "http://schleichardt.github.com/jvmrepo/"`
-    * add to your project/Build.scala `resolvers += "schleichardts Github" at "http://schleichardt.github.com/jvmrepo/"`
-* add to your project/plugins.sbt `addSbtPlugin("info.schleichardt" % "coffee-qunit-sbt-plugin" % "0.3-SNAPSHOT")`
-* add to your routes: `GET /@qunit controllers.QUnit.index(templateName: String ?= "", asset: String ?= "")`
-* add to your project/Build.scala the dependency: `"info.schleichardt" %% "play-coffee-qunit" % "0.3-SNAPSHOT"`
+I will use maven central for deployment, for now are only snapshots on sonatype available and you need to setup new resolvers.
+
+1. add to project/plugins.sbt
+```resolvers += "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots"
+
+addSbtPlugin("info.schleichardt" % "coffee-qunit-sbt-plugin" % "0.3-SNAPSHOT")
+```
+2. set in project/Build.scala (dont miss the last line!)
+```val appDependencies = Seq(
+         "info.schleichardt" %% "play-coffee-qunit" % "0.3-SNAPSHOT"
+    )
+
+val main = PlayProject(appName, appVersion, appDependencies, mainLang = JAVA).settings(
+         resolvers += "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots"
+       ).settings(info.schleichardt.playcoffeequnit.sbt.CoffeeQunitSbtPlugin.buildPipelineSettings(): _*)
+```
+3. add to conf/routes: `GET     /@qunit                     controllers.QUnit.index(templateName: String ?= "", asset: String ?= "", testFile: String ?= "")`
 
 ## Licence
 
