@@ -21,7 +21,7 @@ For now it is for play 2.0.4.
 * put a scala template in the folder test/views of your project, i.e. test/views/test/sub1/sub2/test1.scala.html and load the test script
 * <pre>
 ```@qunit.test {
-      <script src="/public/sub1/test-file-sub1-with-html.test.js"></script> @* load your CoffeeScript QUnit test as JavaScript*@
+      @qunit.script("subfolderOfTest/mySuite.test.coffee") @* also works with JavaScript *@
       <div id="some-element">stuff in body</div>
 }
 ```</pre>
