@@ -11,19 +11,22 @@ import scala.collection.JavaConversions._
 
 object CoffeeQunitSbtPlugin extends Plugin
 {
-  //TODO generalize for multiple test scopes
-  val qUnitRunner = sourceManaged in Test map {
-    dir =>
-      val file = dir / "QunitRunner.scala"
+  def qUnitRunner = (testSrc: File, srcManaged: File) => {
+    if(testSrc.exists()) {
+      val file = srcManaged / "QunitRunner.scala"
       IO.write(file,
         """package qunit
           | class QunitRunner extends qunit.QUnitTestsRunner""".stripMargin)
       Seq(file)
+    } else {
+      Seq[File]()
+    }
   }
 
-  def testTemplatesIndex = (sourceDirectory: File, srcManaged: File) => {
-    val testFiles = FileUtils.listFiles(sourceDirectory, Array("scala.html"), true)
-    val absPathLength: Int = (sourceDirectory.absolutePath + "/views/").length
+  def testTemplatesIndex = (testSrc: File, srcManaged: File) => {
+    import java.util.Collections
+    val testFiles = if(testSrc.exists()) { FileUtils.listFiles(testSrc, Array("scala.html"), true) } else {Collections.emptyList()}
+    val absPathLength: Int = (testSrc.absolutePath + "/views/").length
     val paths = testFiles.map(_.absolutePath.substring(absPathLength))
     def toClassName(path: String): String = {
       val pathElements = path.split("/").toList
@@ -50,8 +53,8 @@ object CoffeeQunitSbtPlugin extends Plugin
   }
 
   def buildPipelineSettings(testScope: Configuration = Test, compileScope: Configuration = Compile): Seq[Project.Setting[_]] = Seq(
-    sourceGenerators in testScope <+= qUnitRunner,
-    sourceGenerators in compileScope <+= (sourceDirectory in testScope, sourceManaged in compileScope, templatesTypes, templatesImport) map ScalaTemplates,
-    sourceGenerators in compileScope <+= (sourceDirectory in testScope, sourceManaged in compileScope) map testTemplatesIndex
-  )
+      sourceGenerators in testScope <+= (sourceDirectory in testScope, sourceManaged in testScope) map qUnitRunner,
+      sourceGenerators in compileScope <+= (sourceDirectory in testScope, sourceManaged in compileScope, templatesTypes, templatesImport) map ScalaTemplates,
+      sourceGenerators in compileScope <+= (sourceDirectory in testScope, sourceManaged in compileScope) map testTemplatesIndex
+    )
 }
