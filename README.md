@@ -25,26 +25,32 @@ For now it is for play 2.0.4.
       <div id="some-element">stuff in body</div>
 }
 ```</pre>
-* see the example app https://github.com/schleichardt/play-coffee-qunit/tree/master/example
+* see the example app https://github.com/schleichardt/play-coffee-qunit/tree/master/demo
 
 ## Installation
 I will use maven central for deployment, for now are only snapshots on sonatype available and you need to setup new resolvers.
 
-1. add to project/plugins.sbt
-```resolvers += "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots"
+* add to project/plugins.sbt 
 
-addSbtPlugin("info.schleichardt" % "coffee-qunit-sbt-plugin" % "0.3-SNAPSHOT")
-```
-2. set in project/Build.scala (dont miss the last line!)
-```val appDependencies = Seq(
+<pre>resolvers += "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots"
+
+addSbtPlugin("info.schleichardt" % "coffee-qunit-sbt-plugin" % "0.3-SNAPSHOT")</pre>
+
+
+* set in project/Build.scala (don't miss the last line!)
+
+
+<pre>val appDependencies = Seq(
          "info.schleichardt" %% "play-coffee-qunit" % "0.3-SNAPSHOT"
-    )
+)
 
 val main = PlayProject(appName, appVersion, appDependencies, mainLang = JAVA).settings(
          resolvers += "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots"
-       ).settings(info.schleichardt.playcoffeequnit.sbt.CoffeeQunitSbtPlugin.buildPipelineSettings(): _*)
-```
-3. add to conf/routes: `GET     /@qunit                     controllers.QUnit.index(templateName: String ?= "", asset: String ?= "", testFile: String ?= "")`
+).settings(info.schleichardt.playcoffeequnit.sbt.CoffeeQunitSbtPlugin.buildPipelineSettings(): _*)
+</pre>
+
+* add to conf/routes: `GET     /@qunit                     controllers.QUnit.index(templateName: String ?= "", asset: String ?= "", testFile: String ?= "")`
+
 
 ## Typical traps
 
