@@ -89,32 +89,6 @@ $ ->
 
 
   ###
-  Posts back the result, so that the server writes an xunit file
-  ###
-  writeXUnit = (testId, result, callback) ->
-    result.browser = browser
-    result.test = testId
-    $.each result.tests, (test) ->
-      @actual = @actual.toString()  if typeof @actual is "object"
-      @expected = @expected.toString()  if typeof @expected is "object"
-
-    $.ajax
-      url: baseURL() + "?result"
-      type: "POST"
-      data:
-        result: JSON.stringify(result)
-
-      dataType: "json"
-      error: ->
-        console.log "error"  if typeof console isnt "undefined"
-        callback arguments
-
-      success: ->
-        callback arguments
-
-
-
-  ###
   Callback function that is called, when a QUnit test is finished in the runner
   @param result The test result of the test.
   ###
@@ -148,13 +122,10 @@ $ ->
       html += "</td></tr>"
 
     html += "</tbody></table>"
-    writeXUnit test.attr("id"), result, ->
-
-      # after xunit write had success or error, we launch the next test
-      if result.summary.failed isnt 0
-        testFail test, html
-      else
-        testSuccess test, html
+    if result.summary.failed isnt 0
+      testFail test, html
+    else
+      testSuccess test, html
 
 
 
