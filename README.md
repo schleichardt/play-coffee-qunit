@@ -34,14 +34,14 @@ I will use maven central for deployment, for now are only snapshots on sonatype 
 
 <pre>resolvers += "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots"
 
-addSbtPlugin("info.schleichardt" % "coffee-qunit-sbt-plugin" % "0.3-SNAPSHOT")</pre>
+addSbtPlugin("info.schleichardt" % "coffee-qunit-sbt-plugin" % "0.4-SNAPSHOT")</pre>
 
 
 * set in project/Build.scala (don't miss the last line!)
 
 
 <pre>val appDependencies = Seq(
-         "info.schleichardt" %% "play-coffee-qunit" % "0.3-SNAPSHOT"
+         "info.schleichardt" %% "play-coffee-qunit" % "0.4-SNAPSHOT"
 )
 
 val main = PlayProject(appName, appVersion, appDependencies, mainLang = JAVA).settings(
@@ -59,7 +59,7 @@ CoffeeScript files are compiled to JavaScript code in an anonymous function wrap
 Connect the functions to the window object or deactivate the wrapper in your Build.scala with `coffeescriptOptions := Seq("bare")`.
 For more information see http://www.playframework.org/documentation/2.0.4/AssetsCoffeeScript .
 
-### Scala templates in test are only compiled on start and changes in there don't support ~test
+### Scala templates in test folder not compiled in browser
 Changes on the Scala templates will only affect the next start if you use the tests in the browser. Test files and assets should be hot deployed.
 
 ## Licence
