@@ -62,6 +62,7 @@ object CoffeeQunitSbtPlugin extends Plugin
       , watchSources <++= (sourceDirectory in testScope) map { path => (path ** "*.coffee").get }
       , watchSources <++= (sourceDirectory in testScope) map { path => (path ** "*.js").get }
       , watchSources <++= (sourceDirectory in compileScope) map { path => (path ** "*.coffee").get }
+      , watchSources <++= baseDirectory map { path => ((path / "public") ** "*.js").get }
       , watchSources <++= (sourceDirectory in testScope) map { path => (path ** "*.scala.html").get }
     )
 }
