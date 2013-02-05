@@ -46,6 +46,16 @@ val main = PlayProject(appName, appVersion, appDependencies, mainLang = JAVA).se
 ```
 3. add to conf/routes: `GET     /@qunit                     controllers.QUnit.index(templateName: String ?= "", asset: String ?= "", testFile: String ?= "")`
 
+## Typical traps
+
+### Function from CoffeeScript is not available in tests
+CoffeeScript files are compiled to JavaScript code in an anonymous function wrapper by default.
+Connect the functions to the window object or deactivate the wrapper in your Build.scala with `coffeescriptOptions := Seq("bare")`.
+For more information see http://www.playframework.org/documentation/2.0.4/AssetsCoffeeScript .
+
+### Scala templates in test are only compiled on start and changes in there don't support ~test
+Changes on the Scala templates will only affect the next start if you use the tests in the browser. Test files and assets should be hot deployed.
+
 ## Licence
 
 This software is licensed under the Apache 2 license, quoted below.
