@@ -9,6 +9,8 @@ import play.api.templates._
 import qunit.QUnitTestsRunner
 import play.api.Play.current
 import qunit.QUnitTestsRunner._
+import ro.isdc.wro.extensions.processor.js.RhinoCoffeeScriptProcessor
+import java.io.{FileReader, StringReader, StringWriter}
 
 abstract class QUnitBase extends Controller {
 
@@ -35,12 +37,16 @@ abstract class QUnitBase extends Controller {
   }
 
   def loadTestFile(testFile: String, request: Request[AnyContent]) = {
-    val file = Play.current.getFile("test/" + testFile)
-    val isCoffeeScript = testFile.endsWith("coffee")
-    if (isCoffeeScript) {
-      Ok.sendFile(file).as("text/coffeescript")
+    val necessaryToCompile = testFile.endsWith("precompiled.js")
+    val filePathToLoad = if (necessaryToCompile) testFile.replace("precompiled.js", "coffee") else testFile
+    val originalFile = Play.current.getFile("test/" + filePathToLoad)
+    if (necessaryToCompile) {
+      val input = new FileReader(originalFile)
+      val writer = new StringWriter()
+      (new RhinoCoffeeScriptProcessor).process(input, writer)
+      Ok(writer.toString).as(MimeJavaScript)
     } else {
-      Ok.sendFile(file).as("text/javascript")
+      Ok.sendFile(originalFile).as(MimeJavaScript)
     }
   }
 
