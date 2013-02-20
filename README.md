@@ -62,6 +62,9 @@ For more information see http://www.playframework.org/documentation/2.0.4/Assets
 ### Scala templates in test folder not compiled in browser
 Changes on the Scala templates will only affect the next start if you use the tests in the browser. Test files and assets should be hot deployed.
 
+### No JUnit XML reports generated
+Add to your Build.scala `testOptions in Test += Tests.Argument("junitxml", "console")`.
+
 ## Licence
 
 This software is licensed under the Apache 2 license, quoted below.
