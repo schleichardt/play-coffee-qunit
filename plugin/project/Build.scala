@@ -1,19 +1,20 @@
 import sbt._
 import Keys._
-import PlayProject._
+import play.Project._
 
 object ApplicationBuild extends Build {
 
     val appName         = "play-coffee-qunit"
-    val appVersion      = "0.4-SNAPSHOT"
+    val appVersion      = "0.5-SNAPSHOT"
 
     val appDependencies = Seq(
       "play" %% "play-test" % play.core.PlayVersion.current //make test libs for compile available
+      , "junit" % "junit-dep" % "4.11" //junit#junit-dep;4.10 is not available in typesafe repo, it is not enough to have it in test scope
     )
 
     val githubPath = "schleichardt/play-coffee-qunit"
 
-    val main = PlayProject(appName, appVersion, appDependencies).settings(
+    val main = play.Project(appName, appVersion, appDependencies).settings(
       organization := "info.schleichardt",
       publishMavenStyle := true,
       publishArtifact in Test := false,

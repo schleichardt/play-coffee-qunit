@@ -1,16 +1,17 @@
 import sbt._
 import Keys._
-import sbt.PlayProject._
+import play.Project._
 
 object ApplicationBuild extends Build {
 
   val appName = "play-coffee-qunit"
-  val appVersion = "0.4-SNAPSHOT"
+  val appVersion = "0.5-SNAPSHOT"
 
   val appDependencies = Seq(
     "info.schleichardt" %% "play-coffee-qunit" % appVersion
+    , "junit" % "junit-dep" % "4.11" % "test" //junit#junit-dep;4.10 is not available in typesafe repo
   )
 
-  val main = PlayProject(appName, appVersion, appDependencies, mainLang = JAVA).settings(
+  val main = play.Project(appName, appVersion, appDependencies).settings(
   ).settings(info.schleichardt.playcoffeequnit.sbt.CoffeeQunitSbtPlugin.buildPipelineSettings(): _*)
 }

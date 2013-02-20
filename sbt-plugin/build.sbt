@@ -4,7 +4,7 @@ name := "coffee-qunit-sbt-plugin"
 
 organization := "info.schleichardt"
 
-version := "0.4-SNAPSHOT"
+version := "0.5-SNAPSHOT"
 
 // Comment to get more information during initialization
 logLevel := Level.Warn
@@ -13,7 +13,7 @@ libraryDependencies += "org.specs2" %% "specs2" % "1.9" % "test"
 
 resolvers += "Typesafe repository" at "http://repo.typesafe.com/typesafe/releases/"
 
-addSbtPlugin("play" % "sbt-plugin" % "2.0.4")
+addSbtPlugin("play" % "sbt-plugin" % "2.1.0")
 
 publishMavenStyle := true
 
