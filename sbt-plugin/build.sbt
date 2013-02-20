@@ -4,7 +4,7 @@ name := "coffee-qunit-sbt-plugin"
 
 organization := "info.schleichardt"
 
-version := "0.5-SNAPSHOT"
+version := "0.6-SNAPSHOT"
 
 // Comment to get more information during initialization
 logLevel := Level.Warn

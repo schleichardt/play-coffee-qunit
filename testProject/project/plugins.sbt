@@ -8,4 +8,4 @@ resolvers += "Typesafe repository" at "http://repo.typesafe.com/typesafe/release
 addSbtPlugin("play" % "sbt-plugin" % "2.1.0")
 
 
-addSbtPlugin("info.schleichardt" % "coffee-qunit-sbt-plugin" % "0.5-SNAPSHOT")
+addSbtPlugin("info.schleichardt" % "coffee-qunit-sbt-plugin" % "0.6-SNAPSHOT")

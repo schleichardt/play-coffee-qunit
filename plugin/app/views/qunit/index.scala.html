@@ -3,73 +3,31 @@
 @import org.apache.commons.lang3.StringUtils._
 
 @title = @{"QUnit tests"}
+@toTestSuiteListElement(item: Pair[String, String]) = @{
+    val name = removeStart(item._2, "views.html.test.")
+    val path = item._1
+    s"""{name: "$name", path: "$path"}"""
+}
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<!doctype html>
+<html lang="en">
     <head>
+        <meta charset="UTF-8">
         <title>@title</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <link rel="stylesheet" href="/@@qunit?asset=stylesheets/qunit.css" />
-    <link rel="stylesheet" href="/@@qunit?asset=stylesheets/testrunner.css" />
+        <link rel="stylesheet" href="/@@qunit?asset=stylesheets/qunit.css" />
+        <link rel="stylesheet" href="/@@qunit?asset=stylesheets/qunit-composite.css" />
 
-        <script src="/@@qunit?asset=javascripts/json2.js" type="text/javascript" charset="utf-8"></script>
-        <script src="/@@qunit?asset=javascripts/jquery.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="/@@qunit?asset=javascripts/jquery.scrollTo-min.js" type="text/javascript" charset="utf-8"></script>
-        <script type="text/javascript" src="/@@qunit?asset=javascripts/testrunner.js" charset="utf-8"></script>
+        <script src="/@@qunit?asset=javascripts/qunit.js"></script>
+        <script src="/@@qunit?asset=javascripts/qunit-composite.js"></script>
+        <script>
+                QUnit.testSuites([
+                    @Html(classUrlPathList.zip(classNameList).map(item => toTestSuiteListElement(item)).mkString(", "))
+                ]);
+        </script>
     </head>
     <body>
-        <div id="header" class="block">
-            <h1> @title</h1>
-            <p>
-                <strong>Select the tests to run</strong>, then click [Start] and pray
-            </p>
-            <div id="loading">working ...</div>
-        </div>
-        <div id="results" class="block">
-
-            <div id="stopped">
-                <span id="start">Start !</span>
-                &nbsp;
-                <span class="nbToRun">no</span> test<span class="nbToRunPluralize"></span> to run <span id="bms">(<a id="" href="#">Bookmark this link to save this configuration</a>) - <span id="unselectAll"><a id="" href="#">Unselect all</a></span></span>
-
-                <span id="quickLinks">
-                    <span id="sa">(<a href="#">Select all</a></span> -
-                    <span id="ra"><a href="#">Run all</a>)</span>
-                </span>
-            </div>
-
-            <div id="started">
-                <span id="stop">Stop ...</span>
-                &nbsp;(running <span class="nbToRun">no</span> test<span class="nbToRunPluralize"></span>)
-            </div>
-
-            <div id="finished">
-
-            </div>
-
-        </div>
-
-        <div id="tests" class="block">
-            <h2><span>There are @classNameList.size QUnit tests</span></h2>
-            <ul>
-            @classUrlPathList.zip(classNameList).map { item =>
-                <li>
-                    <div class="test" id="@item._2.replace(".", "-")">
-                        <span class="touch">+</span><a href="@item._1" title="click to (un)select test and then press 'Start!'">@removeStart(item._2, "views.html.test.")</a>
-                        <div class="testResult"></div>
-                    </div>
-                </li>
-            }
-            </ul>
-        </div>
-        <div id="qunit-mask"></div>
-        <div id="qunit">
-            Play is running a QUnit test... <span id="stopQUnit">Stop it</span>
-            <iframe id="qunit-runner" width="100%" height="100%" src="about:blank"></iframe>
+        <div id="qunit"></div>
+        <div id="qunit-fixture">
         </div>
     </body>
 </html>
-
-
-
-
