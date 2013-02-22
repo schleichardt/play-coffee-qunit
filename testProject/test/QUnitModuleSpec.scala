@@ -13,8 +13,7 @@ class QUnitModuleSpec extends Specification {
 
   "The QUnit module" should {
     "run one test suite in the browser" in new WithBrowser {
-      val path = controllers.qunit.routes.QUnit.html("views.html.test.sub1.sub2.test1").url
-      val url = s"http://localhost:$port/$path?notrycatch=true"
+      val url = s"http://localhost:$port/@qunit/html/views.html.test.sub1.sub2.test1"
       browser.goTo(url)
       browser.title must contain("QUnit")
       val testResultParagraph = browser.$("#qunit-testresult", 0)

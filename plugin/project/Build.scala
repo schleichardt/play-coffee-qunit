@@ -16,6 +16,7 @@ object ApplicationBuild extends Build {
     val githubPath = "schleichardt/play-coffee-qunit"
 
     val main = play.Project(appName, appVersion, appDependencies).settings(
+      sources in (Compile, doc) ~= (_ filter (f => false)),
       organization := "info.schleichardt",
       publishMavenStyle := true,
       publishArtifact in Test := false,

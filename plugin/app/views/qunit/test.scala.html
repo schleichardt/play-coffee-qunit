@@ -2,14 +2,15 @@
 
 @import play.api.Play.current
 @import play.api.Play.isTest
+@import controllers.qunit.QUnit.urlForAsset
 
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8">
     <title>QUnit</title>
-    <link rel="stylesheet" href="@controllers.qunit.routes.Assets.at("stylesheets/qunit.css")">
-    <script src="@controllers.qunit.routes.Assets.at("javascripts/qunit.js")"></script>
+    <link rel="stylesheet" href="@urlForAsset("stylesheets/qunit.css")">
+    <script src="@urlForAsset("javascripts/qunit.js")"></script>
 </head>
 <body>
     <div id="qunit"></div>

@@ -40,14 +40,20 @@ object QUnitTestsRunner {
   //TODO DRY, duplicate function
   def toClassName(path: String): String = {
     val pathElements = path.split("/").toList
-    val result = ("views.html." + pathElements.mkString(".")).replace(".scala.html", "")
+    val result = ("views.html." + pathElements.mkString(".")).replace(".scala.html", "").replace("views.html.views.html.", "views.html.")
     result
   }
 
-  def filepath(file: File) =  removeStart(file.getAbsolutePath, testFolder.getAbsolutePath + "/views/")
+  def filepath(file: File) =  removeStart(file.getCanonicalPath, testFolder.getCanonicalPath + "/views/")
+
+  def testFileToUrlPath(relativePath: String): String = {
+    val className = toClassName(relativePath)
+    val url = controllers.qunit.QUnit.urlForHtml(className)
+    url
+  }
 
   def testFileToUrlPath(file: File): String = {
-    "?templateName=" + toClassName(filepath(file))
+    testFileToUrlPath(filepath(file))
   }
 
   def classUrlPathList = testFiles map {file => testFileToUrlPath(file)}
@@ -62,35 +68,36 @@ abstract class QUnitTestsRunner extends Specification {
   import QUnitTestsRunner._
 
   lazy val Port = 3333 //TODO port configurable
-  val baseUrl = "http://localhost:" + Port + "/@qunit"
+  val baseUrl = "http://localhost:" + Port + ""
   val selectorFailedCounter = "#qunit-testresult .failed"
 
 
-    running(TestServer(Port), HTMLUNIT) {
-      browser =>
-        classUrlPathList foreach {
-          clazzUrlPath =>
-            browser.goTo(baseUrl + clazzUrlPath)
-            waitUntilJavaScriptTestsFinished(browser)
-            val results: Seq[QUnitTestResult] = collectTestResults(browser)
+  running(TestServer(Port), HTMLUNIT) {
+    browser =>
+      classUrlPathList foreach {
+        clazzUrlPath =>
+          println("+#++# " + clazzUrlPath)
+          browser.goTo(baseUrl + clazzUrlPath)
+          waitUntilJavaScriptTestsFinished(browser)
+          val results: Seq[QUnitTestResult] = collectTestResults(browser)
 
 
-            val modulesInOrder = collection.SortedSet.empty[String] ++ results.map(_.moduleName)
-            val groupedByModuleName = results.groupBy(_.moduleName)
+          val modulesInOrder = collection.SortedSet.empty[String] ++ results.map(_.moduleName)
+          val groupedByModuleName = results.groupBy(_.moduleName)
 
-            for (module <- modulesInOrder) {
-              module in {
-                val testsInModule = groupedByModuleName.get(module).get
-                for (res <- testsInModule) {
-                  res.testName in {
-                    res must QUnitMatcher
-                  }
+          for (module <- modulesInOrder) {
+            module in {
+              val testsInModule = groupedByModuleName.get(module).get
+              for (res <- testsInModule) {
+                res.testName in {
+                  res must QUnitMatcher
                 }
               }
             }
-        }
-        1 === 1
-    }
+          }
+      }
+      1 === 1
+  }
 
   def collectTestResults(browser: TestBrowser): Seq[QUnitTestResult] = {
     val testCaseSuccessMessages = browser.$("#qunit-tests > li")

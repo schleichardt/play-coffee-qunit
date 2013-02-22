@@ -1,6 +1,7 @@
 @(classUrlPathList: Iterable[String], classNameList: Iterable[String])(implicit request: play.api.mvc.RequestHeader)
 
 @import org.apache.commons.lang3.StringUtils._
+@import controllers.qunit.QUnit.urlForAsset
 
 @title = @{"QUnit tests"}
 @toTestSuiteListElement(item: Pair[String, String]) = @{
@@ -14,11 +15,11 @@
     <head>
         <meta charset="UTF-8">
         <title>@title</title>
-        <link rel="stylesheet" href="@controllers.qunit.routes.Assets.at("stylesheets/qunit.css")" />
-        <link rel="stylesheet" href="@controllers.qunit.routes.Assets.at("stylesheets/qunit-composite.css")" />
+        <link rel="stylesheet" href="@urlForAsset("stylesheets/qunit.css")" />
+        <link rel="stylesheet" href="@urlForAsset("stylesheets/qunit-composite.css")" />
 
-        <script src="@controllers.qunit.routes.Assets.at("javascripts/qunit.js")"></script>
-        <script src="@controllers.qunit.routes.Assets.at("javascripts/qunit-composite.js")"></script>
+        <script src="@urlForAsset("javascripts/qunit.js")"></script>
+        <script src="@urlForAsset("javascripts/qunit-composite.js")"></script>
         <script>
                 QUnit.testSuites([
                     @Html(classUrlPathList.zip(classNameList).map(item => toTestSuiteListElement(item)).mkString(", "))

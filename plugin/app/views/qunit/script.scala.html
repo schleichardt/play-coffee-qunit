@@ -1,9 +1,12 @@
 @(file: String)
 
+@import controllers.qunit.QUnit.urlForCsAsJs
+@import controllers.qunit.QUnit.urlForJavaScript
+
 @isCoffeeScript() = @{file.endsWith(".coffee")}
 
 @if(isCoffeeScript) {
-    <script src="@controllers.qunit.routes.QUnit.csAsJs(file)"></script>
+    <script src="@urlForCsAsJs(file)"></script>
 } else {
-    <script src="@controllers.qunit.routes.QUnit.javascript(file)"></script>
+    <script src="@urlForJavaScript(file)"></script>
 }
