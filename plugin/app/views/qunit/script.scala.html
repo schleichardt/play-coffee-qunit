@@ -1,3 +1,9 @@
-@(fileName: String)
+@(file: String)
 
-<script src="/@@qunit?testFile=@(if(fileName.endsWith(".coffee")) fileName.replaceAll("coffee$","precompiled.js") else fileName)"></script>
+@isCoffeeScript() = @{file.endsWith(".coffee")}
+
+@if(isCoffeeScript) {
+    <script src="@controllers.qunit.routes.QUnit.csAsJs(file)"></script>
+} else {
+    <script src="@controllers.qunit.routes.QUnit.javascript(file)"></script>
+}
