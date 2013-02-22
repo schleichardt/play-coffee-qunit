@@ -55,9 +55,12 @@ object CoffeeQunitSbtPlugin extends Plugin
     Seq(file)
   }
 
+  val testTemplatesImport = SettingKey[Seq[String]]("test-templates-imports")
+
   def buildPipelineSettings(testScope: Configuration = Test, compileScope: Configuration = Compile): Seq[Project.Setting[_]] = Seq(
       sourceGenerators in testScope <+= (sourceDirectory in testScope, sourceManaged in testScope) map qUnitRunner
-      , sourceGenerators in compileScope <+= (state, sourceDirectory in testScope, sourceManaged in compileScope, templatesTypes, templatesImport) map ScalaTemplates
+      , testTemplatesImport <<= templatesImport {imports => Seq("views.html.qunit.{test => qunitTest, script => qunitScript}") ++ imports}
+      , sourceGenerators in compileScope <+= (state, sourceDirectory in testScope, sourceManaged in compileScope, templatesTypes, testTemplatesImport) map ScalaTemplates
       , sourceGenerators in compileScope <+= (sourceDirectory in testScope, sourceManaged in compileScope) map testTemplatesIndex
       , watchSources <++= (sourceDirectory in testScope) map { path => (path ** "*.coffee").get }
       , watchSources <++= (sourceDirectory in testScope) map { path => (path ** "*.js").get }
