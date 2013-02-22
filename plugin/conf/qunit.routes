@@ -1,1 +1,2 @@
-GET / controllers.qunit.QUnit.index(templateName: String ?= "", asset: String ?= "", testFile: String ?= "")
+GET     /                           controllers.qunit.QUnit.index(templateName: String ?= "", testFile: String ?= "")
+GET     /assets/*file               controllers.qunit.Assets.at(path="/public", file)

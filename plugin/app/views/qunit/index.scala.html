@@ -14,11 +14,11 @@
     <head>
         <meta charset="UTF-8">
         <title>@title</title>
-        <link rel="stylesheet" href="/@@qunit?asset=stylesheets/qunit.css" />
-        <link rel="stylesheet" href="/@@qunit?asset=stylesheets/qunit-composite.css" />
+        <link rel="stylesheet" href="@controllers.qunit.routes.Assets.at("stylesheets/qunit.css")" />
+        <link rel="stylesheet" href="@controllers.qunit.routes.Assets.at("stylesheets/qunit-composite.css")" />
 
-        <script src="/@@qunit?asset=javascripts/qunit.js"></script>
-        <script src="/@@qunit?asset=javascripts/qunit-composite.js"></script>
+        <script src="@controllers.qunit.routes.Assets.at("javascripts/qunit.js")"></script>
+        <script src="@controllers.qunit.routes.Assets.at("javascripts/qunit-composite.js")"></script>
         <script>
                 QUnit.testSuites([
                     @Html(classUrlPathList.zip(classNameList).map(item => toTestSuiteListElement(item)).mkString(", "))
