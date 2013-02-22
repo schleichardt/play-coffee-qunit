@@ -38,7 +38,7 @@ object CoffeeQunitSbtPlugin extends Plugin
 
     val export = paths.map(path => templatePathoToClassName(path)).map(path => """  "%s" -> %s.asInstanceOf[Template0[Result]]""".format(path, path)).mkString(", ")
 
-    val file = srcManaged / "controllers" / "QUnit.scala"
+    val file = srcManaged / "controllers" / "qunit" / "TemplateMapping.scala"
     IO.write(file,
       """package controllers
         |
@@ -46,7 +46,7 @@ object CoffeeQunitSbtPlugin extends Plugin
         |import controllers._
         |import play.api.templates._
         |
-        |object QUnit extends QUnitBase {
+        |private[controllers] class QUnitTemplateMapping {
         |   val testTemplateNameToClassMap: Map[String, Template0[Result]] = Map(
         |      %s
         |   )

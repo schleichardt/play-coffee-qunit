@@ -12,9 +12,16 @@ import qunit.QUnitTestsRunner._
 import ro.isdc.wro.extensions.processor.js.RhinoCoffeeScriptProcessor
 import java.io.{FileReader, StringReader, StringWriter}
 
-abstract class QUnitBase extends Controller {
+object QUnit extends Controller {
 
-  val testTemplateNameToClassMap: Map[String, Template0[Result]]
+  private type TemplateMapping = Map[String, Template0[Result]]
+
+  private lazy val testTemplateNameToClassMap: TemplateMapping = {
+    val clazz = Class.forName("controllers.QUnitTemplateMapping")
+    val instance = clazz.getConstructor().newInstance()
+    val getter = clazz.getMethod("testTemplateNameToClassMap")
+    getter.invoke(instance).asInstanceOf[TemplateMapping]
+  }
   val MimeJavaScript = "text/javascript"
 
   def index(templateName: String, asset: String, testFile: String) = Action { implicit request =>
