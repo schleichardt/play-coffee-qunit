@@ -17,6 +17,7 @@ class QUnitModuleSpec extends Specification {
       browser.title must contain("QUnit")
       val testResultParagraph = browser.$("#qunit-testresult", 0)
       browser.await().atMost(3000).until(testResultParagraph.getText.contains("Tests completed in "))
+      browser.pageSource() must contain("test description test 1 module 1")
       testResultParagraph.find(".failed").getText must be equalTo("0")
     }
 
