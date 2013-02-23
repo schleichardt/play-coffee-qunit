@@ -64,7 +64,6 @@ object QUnitTestsRunner {
 }
 
 abstract class QUnitTestsRunner extends Specification {
-  import ConsoleColors._
   import QUnitTestsRunner._
 
   lazy val Port = 3333 //TODO port configurable
@@ -86,13 +85,13 @@ abstract class QUnitTestsRunner extends Specification {
           val groupedByModuleName = results.groupBy(_.moduleName)
 
           for (module <- modulesInOrder) {
-            module in {
-              val testsInModule = groupedByModuleName.get(module).get
-              for (res <- testsInModule) {
-                res.testName in {
-                  res must QUnitMatcher
-                }
+            module + " in " + clazzUrlPath should {
+            val testsInModule = groupedByModuleName.get(module).get
+            for (res <- testsInModule) {
+              res.testName in {
+                res must QUnitMatcher
               }
+            }
             }
           }
       }
