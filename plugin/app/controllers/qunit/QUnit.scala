@@ -2,10 +2,12 @@ package controllers.qunit
 
 import play.api.mvc._
 import play.api._
+import http.MimeTypes
 import play.api.templates._
 import qunit.QUnitTestsRunner._
 import ro.isdc.wro.extensions.processor.js.RhinoCoffeeScriptProcessor
 import java.io.{FileReader, StringWriter}
+import MimeTypes.JAVASCRIPT
 
 object QUnit extends Controller {
 
@@ -17,7 +19,6 @@ object QUnit extends Controller {
     val getter = clazz.getMethod("testTemplateNameToClassMap")
     getter.invoke(instance).asInstanceOf[TemplateMapping]
   }
-  val MimeJavaScript = "text/javascript"
 
   def index = Action { implicit request =>
     Ok(views.html.qunit.index(classUrlPathList, classNameList))
@@ -31,14 +32,14 @@ object QUnit extends Controller {
   }
 
   def javascript(file: String) = Action { implicit request =>
-    Ok.sendFile(Play.current.getFile("test/" + file)).as(MimeJavaScript)
+    Ok.sendFile(Play.current.getFile("test/" + file)).as(JAVASCRIPT)
   }
 
   def csAsJs(file: String) = Action { implicit request =>
     val input = new FileReader(Play.current.getFile("test/" + file))
     val writer = new StringWriter()
     (new RhinoCoffeeScriptProcessor).process(input, writer)
-    Ok(writer.toString).as(MimeJavaScript)
+    Ok(writer.toString).as(JAVASCRIPT)
   }
 
   def urlForAsset(file: String) = controllers.qunit.routes.Assets.at(file).url
