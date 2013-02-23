@@ -44,7 +44,7 @@ object QUnit extends Controller {
   def workaround(file: String) = Action { implicit request =>
     val newFile = file.replace("/@qunit//", "/@qunit/")
     Logger.info(s"workaround for: $file is $newFile")
-    TemporaryRedirect(file)
+    TemporaryRedirect(newFile)
   }
 
   private def fixPlayRouteBug(route: String) = {
