@@ -41,18 +41,8 @@ object QUnit extends Controller {
     Ok(writer.toString).as(MimeJavaScript)
   }
 
-  def workaround(file: String) = Action { implicit request =>
-    val newFile = file.replace("/@qunit//", "/@qunit/")
-    Logger.info(s"workaround for: $file is $newFile")
-    TemporaryRedirect(newFile)
-  }
-
-  private def fixPlayRouteBug(route: String) = {
-    route.replaceAll("^/@qunit([^/])", "/@qunit/$1")
-  }
-
-  def urlForAsset(file: String) = fixPlayRouteBug(controllers.qunit.routes.Assets.at(file).url)
-  def urlForCsAsJs(file: String) = fixPlayRouteBug(controllers.qunit.routes.QUnit.csAsJs(file).url)
-  def urlForJavaScript(file: String) = fixPlayRouteBug(controllers.qunit.routes.QUnit.javascript(file).url)
-  def urlForHtml(file: String) = fixPlayRouteBug(controllers.qunit.routes.QUnit.html(file).url)
+  def urlForAsset(file: String) = controllers.qunit.routes.Assets.at(file).url
+  def urlForCsAsJs(file: String) = controllers.qunit.routes.QUnit.csAsJs(file).url
+  def urlForJavaScript(file: String) = controllers.qunit.routes.QUnit.javascript(file).url
+  def urlForHtml(file: String) = controllers.qunit.routes.QUnit.html(file).url
 }
