@@ -75,7 +75,6 @@ abstract class QUnitTestsRunner extends Specification {
     browser =>
       classUrlPathList foreach {
         clazzUrlPath =>
-          println("+#++# " + clazzUrlPath)
           browser.goTo(baseUrl + clazzUrlPath)
           waitUntilJavaScriptTestsFinished(browser)
           val results: Seq[QUnitTestResult] = collectTestResults(browser)
