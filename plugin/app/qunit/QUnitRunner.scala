@@ -66,6 +66,7 @@ abstract class QUnitTestsRunner extends Specification {
   val baseUrl = "http://localhost:" + Port
   val selectorFailedCounter = "#qunit-testresult .failed"
 
+  /* mediating between QUnit and Specs2 */
   running(TestServer(Port), HTMLUNIT) {
     browser =>
       classUrlPathList foreach {
