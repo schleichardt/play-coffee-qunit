@@ -21,7 +21,7 @@ import scala.Predef._
 object QUnitMatcher extends Matcher[QUnitTestResult] {
   def apply[S <: QUnitTestResult](s: Expectable[S]) = {
     result(s.value.failedCount < 1,
-      s.description + " +++++++++++",
+      s.description,
       s.value.assertionErrors.mkString("\n"),
       s)
   }
@@ -37,7 +37,6 @@ object QUnitTestsRunner {
     testFilesUnsorted.sortWith((left, right) => left.getAbsolutePath < right.getAbsolutePath)
   }
 
-  //TODO DRY, duplicate function
   def toClassName(path: String): String = {
     val pathElements = path.split("/").toList
     val result = ("views.html." + pathElements.mkString(".")).replace(".scala.html", "").replace("views.html.views.html.", "views.html.")
@@ -85,12 +84,12 @@ abstract class QUnitTestsRunner extends Specification {
 
           for (module <- modulesInOrder) {
             module + " in " + clazzUrlPath should {
-            val testsInModule = groupedByModuleName.get(module).get
-            for (res <- testsInModule) {
-              res.testName in {
-                res must QUnitMatcher
+              val testsInModule = groupedByModuleName.get(module).get
+              for (res <- testsInModule) {
+                res.testName in {
+                  res must QUnitMatcher
+                }
               }
-            }
             }
           }
       }
