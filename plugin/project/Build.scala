@@ -8,12 +8,12 @@ object ApplicationBuild extends Build {
     val appVersion      = "0.6-SNAPSHOT"
 
     val appDependencies = Seq(
-      "play" %% "play-test" % play.core.PlayVersion.current % "provided"//make test libs for compile available
-      , "junit" % "junit-dep" % "4.11" //junit#junit-dep;4.10 is not available in typesafe repo, it is not enough to have it in test scope
-      , "ro.isdc.wro4j" % "wro4j-extensions" % "1.6.2" //used for compiling CoffeeScript in tests
+      "play" %% "play-test" % play.core.PlayVersion.current % "provided"//make test libs for module compilation available, but don't put it into fat JARs
+      , "junit" % "junit-dep" % "4.11" % "test" //junit#junit-dep;4.10 is not available in typesafe repo
+      , "ro.isdc.wro4j" % "wro4j-extensions" % "1.6.2" exclude("com.github.lltyk","dojo-shrinksafe") exclude("com.github.sommeri","less4j") exclude("com.google.code.gson","gson") exclude("com.google.javascript","closure-compiler") exclude("javax.servlet","servlet-api") exclude("me.n4u.sass","sass-gems") exclude("nz.co.edmi","bourbon-gem-jar") exclude("org.codehaus.gmaven.runtime","gmaven-runtime-1.7") exclude("org.springframework","spring-web") exclude("org.jruby","jruby-complete")//used for compiling CoffeeScript in tests )
     )
 
-    val githubPath = "schleichardt/play-coffee-qunit"
+  val githubPath = "schleichardt/play-coffee-qunit"
 
     val main = play.Project(appName, appVersion, appDependencies).settings(
       sources in (Compile, doc) ~= (_ filter (f => false)),
