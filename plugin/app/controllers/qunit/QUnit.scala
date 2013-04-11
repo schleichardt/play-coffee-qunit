@@ -4,7 +4,7 @@ import play.api.mvc._
 import play.api._
 import http.MimeTypes
 import play.api.templates._
-import qunit.QUnitTestsRunner._
+import qunit.QUnitUtils._
 import ro.isdc.wro.extensions.processor.js.RhinoCoffeeScriptProcessor
 import java.io.{FileReader, StringWriter}
 import MimeTypes.JAVASCRIPT
