@@ -8,7 +8,7 @@ object ApplicationBuild extends Build {
     val appVersion      = "0.6-SNAPSHOT"
 
     val appDependencies = Seq(
-      "play" %% "play-test" % play.core.PlayVersion.current //make test libs for compile available
+      "play" %% "play-test" % play.core.PlayVersion.current % "provided"//make test libs for compile available
       , "junit" % "junit-dep" % "4.11" //junit#junit-dep;4.10 is not available in typesafe repo, it is not enough to have it in test scope
       , "ro.isdc.wro4j" % "wro4j-extensions" % "1.6.2" //used for compiling CoffeeScript in tests
     )
