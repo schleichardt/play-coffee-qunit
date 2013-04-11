@@ -1,13 +1,10 @@
 package qunit
 
-import collection.immutable.SortedSet
 import java.io.File
-import java.lang.String
 import java.net.URLEncoder
 import java.util.concurrent.TimeUnit
 import org.apache.commons.lang3.StringUtils._
-import org.fest.assertions.Assertions._
-import org.specs2.matcher.{Expectable, Matcher, MatchFailure}
+import org.specs2.matcher.{Expectable, Matcher}
 import org.specs2.mutable.Specification
 import play.api.test.Helpers._
 import play.api.test._
@@ -15,28 +12,25 @@ import org.apache.commons.io.FileUtils
 import play.api.test.TestServer
 import scala.Array
 import scala.collection.JavaConversions._
-import scala.collection.JavaConverters._
 import scala.Predef._
 
 object QUnitMatcher extends Matcher[QUnitTestResult] {
   def apply[S <: QUnitTestResult](s: Expectable[S]) = {
-    result(s.value.failedCount < 1,
-      s.description,
-      s.value.assertionErrors.mkString("\n"),
-      s)
+    result(s.value.failedCount < 1, s.description, s.value.assertionErrors.mkString("\n"), s)
   }
 }
 
 case class QUnitTestResult(moduleName: String, testName: String, failedCount: Int, passedCount: Int, assertionErrors: Seq[String])
 
 object QUnitTestsRunner {
-  val TestFileExtension = "scala.html"
   lazy val testFolder = play.api.Play.current.getFile("/test/")
-  def testFiles = {
-    val testFilesUnsorted = if(testFolder.exists && testFolder.isDirectory) FileUtils.listFiles(testFolder, Array(TestFileExtension), true).toList else List[File]()
+  def scalaTemplateFilesInTestFolder = {
+    val ScalaTemplateFileExtension = "scala.html"
+    val testFilesUnsorted = if(testFolder.exists && testFolder.isDirectory) FileUtils.listFiles(testFolder, Array(ScalaTemplateFileExtension), true).toList else List[File]()
     testFilesUnsorted.sortWith((left, right) => left.getAbsolutePath < right.getAbsolutePath)
   }
 
+  /** converts the location of a Scala template to the class name of the template*/
   def toClassName(path: String): String = {
     val pathElements = path.split("/").toList
     val result = ("views.html." + pathElements.mkString(".")).replace(".scala.html", "").replace("views.html.views.html.", "views.html.")
@@ -51,24 +45,21 @@ object QUnitTestsRunner {
     url
   }
 
-  def testFileToUrlPath(file: File): String = {
-    testFileToUrlPath(filepath(file))
-  }
+  def testFileToUrlPath(file: File): String = testFileToUrlPath(filepath(file))
 
-  def classUrlPathList = testFiles map {file => testFileToUrlPath(file)}
+  def classUrlPathList = scalaTemplateFilesInTestFolder map {file => testFileToUrlPath(file)}
 
-  def classNameList = testFiles map {file => toClassName(filepath(file))}
+  def classNameList = scalaTemplateFilesInTestFolder map {file => toClassName(filepath(file))}
 
-  def testFilesNumber = testFiles.size
+  def testFilesNumber = scalaTemplateFilesInTestFolder.size
 }
 
 abstract class QUnitTestsRunner extends Specification {
   import QUnitTestsRunner._
 
-  lazy val Port = 3333 //TODO port configurable
-  val baseUrl = "http://localhost:" + Port + ""
+  lazy val Port = 3333
+  val baseUrl = "http://localhost:" + Port
   val selectorFailedCounter = "#qunit-testresult .failed"
-
 
   running(TestServer(Port), HTMLUNIT) {
     browser =>
@@ -77,11 +68,8 @@ abstract class QUnitTestsRunner extends Specification {
           browser.goTo(baseUrl + clazzUrlPath)
           waitUntilJavaScriptTestsFinished(browser)
           val results: Seq[QUnitTestResult] = collectTestResults(browser)
-
-
           val modulesInOrder = collection.SortedSet.empty[String] ++ results.map(_.moduleName)
           val groupedByModuleName = results.groupBy(_.moduleName)
-
           for (module <- modulesInOrder) {
             module + " in " + clazzUrlPath should {
               val testsInModule = groupedByModuleName.get(module).get
@@ -93,7 +81,6 @@ abstract class QUnitTestsRunner extends Specification {
             }
           }
       }
-      1 === 1
   }
 
   def collectTestResults(browser: TestBrowser): Seq[QUnitTestResult] = {
@@ -115,10 +102,8 @@ abstract class QUnitTestsRunner extends Specification {
   }
 
   def waitUntilJavaScriptTestsFinished(browser: TestBrowser) {
-    browser.await.atMost(4, TimeUnit.SECONDS).until(selectorFailedCounter).hasSize(1)//TODO timeout should be configurable
+    browser.await.atMost(4, TimeUnit.SECONDS).until(selectorFailedCounter).hasSize(1)
   }
 
-  def urlEncode(s: String): String = {
-    URLEncoder.encode(s, "utf-8")
-  }
+  def urlEncode(s: String): String = URLEncoder.encode(s, "utf-8")
 }
