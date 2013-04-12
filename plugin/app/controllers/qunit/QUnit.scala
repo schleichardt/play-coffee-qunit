@@ -36,10 +36,12 @@ object QUnit extends Controller {
     Ok.sendFile(Play.current.getFile("test/" + file)).as(JAVASCRIPT)
   }
 
+  lazy val coffeeScriptProcessor = new RhinoCoffeeScriptProcessor
+
   def csAsJs(file: String) = NonProdAction { implicit request =>
     val input = new FileReader(Play.current.getFile("test/" + file))
     val writer = new StringWriter()
-    (new RhinoCoffeeScriptProcessor).process(input, writer)
+    coffeeScriptProcessor.process(input, writer)
     Ok(writer.toString).as(JAVASCRIPT)
   }
 
