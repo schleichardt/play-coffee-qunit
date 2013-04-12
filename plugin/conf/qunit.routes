@@ -1,9 +1,9 @@
-GET     /                            controllers.qunit.QUnit.index
-GET     //html/*file                 controllers.qunit.QUnit.html(file: String)
-GET     /html/*file                 controllers.qunit.QUnit.html(file: String)
-GET     //js/*file                   controllers.qunit.QUnit.javascript(file: String)
-GET     /js/*file                   controllers.qunit.QUnit.javascript(file: String)
-GET     //cs-as-js/*file             controllers.qunit.QUnit.csAsJs(file: String)
-GET     /cs-as-js/*file             controllers.qunit.QUnit.csAsJs(file: String)
-GET     //assets/*file               controllers.qunit.Assets.at(path="/public", file)
-GET     /assets/*file               controllers.qunit.Assets.at(path="/public", file)
+GET     /                       controllers.qunit.QUnit.index
+GET     //html/*file            controllers.qunit.QUnit.html(file: String)
+GET     /html/*file             controllers.qunit.QUnit.html(file: String)
+GET     //js/*file              controllers.qunit.QUnit.javascript(file: String)
+GET     /js/*file               controllers.qunit.QUnit.javascript(file: String)
+GET     //cs-as-js/*file        controllers.qunit.QUnit.csAsJs(file: String)
+GET     /cs-as-js/*file         controllers.qunit.QUnit.csAsJs(file: String)
+GET     //assets/*file          controllers.qunit.Assets.at(path="/public", file)
+GET     /assets/*file           controllers.qunit.Assets.at(path="/public", file)
