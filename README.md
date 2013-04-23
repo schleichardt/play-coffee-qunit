@@ -1,13 +1,12 @@
 # play-coffee-qunit
-A plugin to write QUnit tests with CoffeeScript and run tests in browser or in console.
+An experimental plugin to write QUnit tests with CoffeeScript and run tests in browser or in console.
 It is a spare time project. Use it a your own risk. Support can be dropped at any time and APIs may change.
 For now it is for play 2.0.4.
 
 ## Features
-* for play 2.0.4
-* only one route to set
+* for play 2.1
 * can be used with CoffeeScript or JavaScript
-* app test files only in test folder and not mixed in public or app folder
+* test files reside only in the "test" folder and are not bundled with tha application
 * use Scala template engine to write tests, so you can re use your tags
 * runs in console and in browser
 
@@ -20,7 +19,7 @@ For now it is for play 2.0.4.
 * put your CoffeeScript QUnit test in the test folder
 * put a scala template in the folder test/views of your project, i.e. test/views/test/sub1/sub2/test1.scala.html and load the test script
 * <pre>
-```@qunit.test {
+```@qunitTest {
       @qunit.script("subfolderOfTest/mySuite.test.coffee") @* also works with JavaScript *@
       <div id="some-element">stuff in body</div>
 }
@@ -34,14 +33,14 @@ I will use maven central for deployment, for now are only snapshots on sonatype 
 
 <pre>resolvers += "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots"
 
-addSbtPlugin("info.schleichardt" % "coffee-qunit-sbt-plugin" % "0.4-SNAPSHOT")</pre>
+addSbtPlugin("info.schleichardt" % "coffee-qunit-sbt-plugin" % "0.6-SNAPSHOT")</pre>
 
 
 * set in project/Build.scala (don't miss the last line!)
 
 
 <pre>val appDependencies = Seq(
-         "info.schleichardt" %% "play-coffee-qunit" % "0.4-SNAPSHOT"
+         "info.schleichardt" %% "play-coffee-qunit" % "0.6-SNAPSHOT"
 )
 
 val main = PlayProject(appName, appVersion, appDependencies, mainLang = JAVA).settings(
@@ -49,7 +48,7 @@ val main = PlayProject(appName, appVersion, appDependencies, mainLang = JAVA).se
 ).settings(info.schleichardt.playcoffeequnit.sbt.CoffeeQunitSbtPlugin.buildPipelineSettings(): _*)
 </pre>
 
-* add to conf/routes: `GET     /@qunit                     controllers.QUnit.index(templateName: String ?= "", asset: String ?= "", testFile: String ?= "")`
+* add to conf/routes: `->     /@qunit qunit.Routes`
 
 
 ## Typical traps
@@ -77,15 +76,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 ## Inspirations
 * https://github.com/playframework/play
-    * Apache 2 license
-    * testrunner code
 * https://github.com/playframework/Play20
-    * Apache 2 license, Copyright 2012 Typesafe (http://www.typesafe.com).
-    * how to compile CoffeeScript files
-* https://github.com/irregular-at/play-qunit only for play 1
-    * Apache 2 license
-    * idea to use template engine to write tests
-    * use /@qunit as url
-    * run differen QUnit tests in browser, layout browser runner
+* https://github.com/irregular-at/play-qunit
 * https://github.com/gcusnieux/play20-qunit
-    * how to visualize test results in console
+* https://github.com/jameslowry/play2-qunit
