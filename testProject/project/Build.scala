@@ -21,5 +21,6 @@ object ApplicationBuild extends Build {
   val main = play.Project(appName, appVersion, appDependencies).settings(
     testOptions in Test += Tests.Argument("junitxml", "console")
     , logBuffered in Test := false
+    , scalacOptions in ThisBuild ++= Seq("-unchecked", "-deprecation", "-feature")
   ).settings(info.schleichardt.playcoffeequnit.sbt.CoffeeQunitSbtPlugin.buildPipelineSettings(): _*)
 }
