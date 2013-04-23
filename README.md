@@ -1,10 +1,9 @@
 # play-coffee-qunit
 An experimental plugin to write QUnit tests with CoffeeScript and run tests in browser or in console.
 It is a spare time project. Use it a your own risk. Support can be dropped at any time and APIs may change.
-For now it is for play 2.0.4.
+For now it is for Play 2.1.
 
 ## Features
-* for play 2.1
 * can be used with CoffeeScript or JavaScript
 * test files reside only in the "test" folder and are not bundled with tha application
 * use Scala template engine to write tests, so you can re use your tags
@@ -20,11 +19,22 @@ For now it is for play 2.0.4.
 * put a scala template in the folder test/views of your project, i.e. test/views/test/sub1/sub2/test1.scala.html and load the test script
 * <pre>
 ```@qunitTest {
-      @qunit.script("subfolderOfTest/mySuite.test.coffee") @* also works with JavaScript *@
+      @qunitScript("subfolderOfTest/mySuite.test.coffee") @* also works with JavaScript *@
       <div id="some-element">stuff in body</div>
 }
 ```</pre>
-* see the example app https://github.com/schleichardt/play-coffee-qunit/tree/master/demo
+
+* example app https://github.com/schleichardt/play-coffee-qunit/tree/master/demo
+
+## Screenshots
+
+### Console
+
+![QUnit in the console](https://github.com/schleichardt/play-coffee-qunit/raw/master/demo/public/images/screenshot-test-runner-console.png)
+
+### Browser
+
+![QUnit in the browser](https://github.com/schleichardt/play-coffee-qunit/raw/master/demo/public/images/screenshot-test-runner-browser.png)
 
 ## Installation
 I will use maven central for deployment, for now are only snapshots on sonatype available and you need to setup new resolvers.
@@ -56,7 +66,7 @@ val main = PlayProject(appName, appVersion, appDependencies, mainLang = JAVA).se
 ### Function from CoffeeScript is not available in tests
 CoffeeScript files are compiled to JavaScript code in an anonymous function wrapper by default.
 Connect the functions to the window object or deactivate the wrapper in your Build.scala with `coffeescriptOptions := Seq("bare")`.
-For more information see http://www.playframework.org/documentation/2.0.4/AssetsCoffeeScript .
+For more information see http://www.playframework.org/documentation/2.1.0/AssetsCoffeeScript .
 
 ### Scala templates in test folder not compiled in browser
 Changes on the Scala templates will only affect the next start if you use the tests in the browser. Test files and assets should be hot deployed.
