@@ -5,7 +5,7 @@ import play.Project._
 object ApplicationBuild extends Build {
 
     val appName         = "play-coffee-qunit"
-    val appVersion      = "0.6-SNAPSHOT"
+    val appVersion      = "0.7-SNAPSHOT"
 
     val appDependencies = Seq(
       "play" %% "play-test" % play.core.PlayVersion.current % "provided"//make test libs for module compilation available, but don't put it into fat JARs

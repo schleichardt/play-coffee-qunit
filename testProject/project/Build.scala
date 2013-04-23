@@ -5,7 +5,7 @@ import play.Project._
 object ApplicationBuild extends Build {
 
   val appName = "play-coffee-qunit"
-  val appVersion = "0.6-SNAPSHOT"
+  val appVersion = "0.7-SNAPSHOT"
 
   val appDependencies = {
     def seleniumDependency(artifactId: String) = "org.seleniumhq.selenium" % artifactId % "2.30.0" % "test"
