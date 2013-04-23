@@ -19,7 +19,7 @@ For now it is for play 2.0.4.
 * put your CoffeeScript QUnit test in the test folder
 * put a scala template in the folder test/views of your project, i.e. test/views/test/sub1/sub2/test1.scala.html and load the test script
 * <pre>
-```@qunit.test {
+```@qunitTest {
       @qunit.script("subfolderOfTest/mySuite.test.coffee") @* also works with JavaScript *@
       <div id="some-element">stuff in body</div>
 }
@@ -33,14 +33,14 @@ I will use maven central for deployment, for now are only snapshots on sonatype 
 
 <pre>resolvers += "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots"
 
-addSbtPlugin("info.schleichardt" % "coffee-qunit-sbt-plugin" % "0.4-SNAPSHOT")</pre>
+addSbtPlugin("info.schleichardt" % "coffee-qunit-sbt-plugin" % "0.6-SNAPSHOT")</pre>
 
 
 * set in project/Build.scala (don't miss the last line!)
 
 
 <pre>val appDependencies = Seq(
-         "info.schleichardt" %% "play-coffee-qunit" % "0.4-SNAPSHOT"
+         "info.schleichardt" %% "play-coffee-qunit" % "0.6-SNAPSHOT"
 )
 
 val main = PlayProject(appName, appVersion, appDependencies, mainLang = JAVA).settings(
