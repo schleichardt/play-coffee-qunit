@@ -4,6 +4,7 @@ It is a spare time project. Use it a your own risk. Support can be dropped at an
 For now it is for Play 2.1.
 
 ## Features
+
 * can be used with CoffeeScript or JavaScript
 * test files reside only in the "test" folder and are not bundled with tha application
 * use Scala template engine to write tests, so you can re use your tags
@@ -11,18 +12,21 @@ For now it is for Play 2.1.
 
 
 ## Run tests
+
 * `play test` to run QUnit tests in the console
 * `play ~run` and open http://localhost:9000/@qunit in your browser
 
 ## Create tests
+
 * put your CoffeeScript QUnit test in the test folder
 * put a scala template in the folder test/views of your project, i.e. test/views/test/sub1/sub2/test1.scala.html and load the test script
-* <pre>
-```@qunitTest {
+
+```
+@qunitTest {
       @qunitScript("subfolderOfTest/mySuite.test.coffee") @* also works with JavaScript *@
       <div id="some-element">stuff in body</div>
 }
-```</pre>
+```
 
 * example app https://github.com/schleichardt/play-coffee-qunit/tree/master/demo
 
@@ -37,6 +41,7 @@ For now it is for Play 2.1.
 ![QUnit in the browser](https://github.com/schleichardt/play-coffee-qunit/raw/master/demo/public/images/screenshot-test-runner-browser.png)
 
 ## Installation
+
 I will use maven central for deployment, for now are only snapshots on sonatype available and you need to setup new resolvers.
 
 * add to project/plugins.sbt 
@@ -64,14 +69,17 @@ val main = PlayProject(appName, appVersion, appDependencies, mainLang = JAVA).se
 ## Typical traps
 
 ### Function from CoffeeScript is not available in tests
+
 CoffeeScript files are compiled to JavaScript code in an anonymous function wrapper by default.
 Connect the functions to the window object or deactivate the wrapper in your Build.scala with `coffeescriptOptions := Seq("bare")`.
 For more information see http://www.playframework.org/documentation/2.1.0/AssetsCoffeeScript .
 
 ### Scala templates in test folder not compiled in browser
+
 Changes on the Scala templates will only affect the next start if you use the tests in the browser. Test files and assets should be hot deployed.
 
 ### No JUnit XML reports generated
+
 Add to your Build.scala `testOptions in Test += Tests.Argument("junitxml", "console")`.
 
 ## Licence
@@ -85,6 +93,7 @@ Licensed under the Apache License, Version 2.0 (the "License"); you may not use 
 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
 
 ## Inspirations
+
 * https://github.com/playframework/play
 * https://github.com/playframework/Play20
 * https://github.com/irregular-at/play-qunit
